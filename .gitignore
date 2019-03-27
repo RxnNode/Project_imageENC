@@ -53,7 +53,7 @@ dkms.conf
 
 # Personal
 .DS_Store
-/.idea
+.idea/
 .gitignore
 cmake-build-debug/
 .idea/workspace.xml
