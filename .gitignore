@@ -58,3 +58,5 @@ dkms.conf
 cmake-build-debug/
 .idea/workspace.xml
 *.xml
+cmake-build-debug/CMakeFiles/project_imageENC.dir/main.c.o
+cmake-build-debug/project_imageENC
