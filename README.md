@@ -4,6 +4,6 @@
 - 完成 Number to binary 2019.03.27  
 - 處理Array copying 2019.03.27  
 # 步驟
-- [ ] Number to binary  
+- [x] Number to binary  
 - [ ] Read images into binary  
 - [ ] Read files into binary
