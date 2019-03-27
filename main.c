@@ -1,10 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ConvertoBinary.h"
+#include <limits.h>
 
+
+void binaryn(int *ptr, long long n){
+    for (int i = sizeof(n)*CHAR_BIT - 1; i >= 0; --i) {
+        *ptr++ = (n>>i) & 1;
+    }
+}
 int main() {
+    
+    int *k[65];
 
+    long long inp =9223372036854775807;
+    int binbuf[64];
 
+    binaryn(binbuf,inp);
+
+    for (int i = 0; i < sizeof inp * CHAR_BIT; ++i)
+        printf("%d", binbuf[i]);
+
+    printf("\n");
+
+/*
+ *  << test
+ *
+    printf("\n%d",1<<0);
+    printf("%d",1<<1);
+    printf("%d",1<<2);
+    printf("%d",1<<3);
+    printf("\nSP : %d",(12 & (1<<0)));
+    printf("\nSP : %d",(12 & (1<<1)));
+    printf("\nSP : %d",(12 & (1<<2)));
+    printf("\nSP : %d",(951 & (1<<9)));
+*/
+
+/*
+ * abandoned binary algorithm
+ *
     long temp, a = 43;
 
     int Arr[64] = {};
@@ -19,7 +52,11 @@ int main() {
         if (a != 0) a = a/2;
     }
 
+*/
 
+/*
+ * Array copying practice
+ *
     int *s[64];
 
     printf("Srr address: %p\n", s);
@@ -45,6 +82,7 @@ int main() {
 
         printf("%d", *s[j]);
     }
+*/
 
 
 
