@@ -1,26 +1,78 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <MacTypes.h>
 
 
-void binaryn(int *ptr, long long n){
+void binaryn(int *ptr, int n){
     for (int i = sizeof(n)*CHAR_BIT - 1; i >= 0; --i) {
         *ptr++ = (n>>i) & 1;
     }
 }
 int main() {
-    
-    int *k[65];
 
+
+
+
+    FILE *dir;
+    FILE *out;
+    FILE *outtest;
+    int c,co;
+    Boolean test = true;
+
+    dir = fopen("../images/image.jpg","r+b");
+
+    if (dir== NULL){
+        perror("Error");
+    } else{
+        printf("Read image successfully\n");
+        out = fopen("../out.txt","wb+");
+        while ((c=fgetc(dir))!=EOF){
+
+
+            int binbuf[32];
+            binaryn(binbuf,c);
+            if (test){
+                for (int i = 0; i < 32; ++i){
+                    fputc(binbuf[i],out);
+                    printf("%d",binbuf[i]);
+                }
+                test =false;
+            }
+
+            printf(" ");
+
+        }
+        printf("\nBBB");
+        fclose(dir);
+        fclose(out);
+        //perror("Error");
+    }
+
+    outtest = fopen("../out.txt","rb");
+
+    if (outtest == NULL){
+        perror("Error");
+    } else{
+        printf("\nStart checking output file...\n");
+        while ((co=fgetc(outtest))!=EOF){
+            printf("%d",co);
+        }
+    }
+
+
+/*
+ *
+    int bin[64];
     long long inp =9223372036854775807;
-    int binbuf[64];
-
-    binaryn(binbuf,inp);
+    printf("\n");
+    printf("Binary: ");
+    binaryn(bin,inp);
 
     for (int i = 0; i < sizeof inp * CHAR_BIT; ++i)
-        printf("%d", binbuf[i]);
+        printf("%d", bin[i]);
 
-    printf("\n");
+*/
 
 /*
  *  << test
