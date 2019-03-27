@@ -54,3 +54,4 @@ dkms.conf
 # Personal
 .DS_Store
 .idea/
+.gitignore
