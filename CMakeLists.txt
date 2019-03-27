@@ -3,4 +3,4 @@ project(project_imageENC C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(project_imageENC main.c)
+add_executable(project_imageENC main.c ConvertoBinary.h)
