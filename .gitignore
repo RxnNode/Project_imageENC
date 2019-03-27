@@ -56,3 +56,4 @@ dkms.conf
 /.idea
 .gitignore
 cmake-build-debug/
+.idea/workspace.xml
