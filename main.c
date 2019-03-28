@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <MacTypes.h>
 #define INT_BIT 2
-
+#define buffersize 8
 
 void binaryn(int *ptr, int n){
     for (int i = sizeof(n)*INT_BIT - 1; i >= 0; --i) {
@@ -12,13 +12,14 @@ void binaryn(int *ptr, int n){
 }
 int main() {
 
-    FILE *dir;
+    FILE *dir, *dir2;
     FILE *out;
     FILE *outtest;
-    int c,co,count=0;
-    Boolean test = false, t = true;
+    int c,count=0, show=0;
+    Boolean test = false;
 
     dir = fopen("../images/image.jpg","r+b");
+    //dir2 = fopen("../images/parrots.jpeg","r+b");
 
     if (dir== NULL){
         printf("Can't read file.");
@@ -28,28 +29,31 @@ int main() {
         out = fopen("../out.txt","wb+");
         if (out){
             while ((c=fgetc(dir))!=EOF) {
-                int binbuf[8];
+                if(show <= 16 )printf("%d ",c);
+                show++;
+                int binbuf[buffersize];
                 binaryn(binbuf, c);
-                if (t) {
-                    for (int i = 0; i < 8; ++i) {
+                //if (show != 10) {
+                    for (int i = 0; i < buffersize; ++i) {
                         fputc(binbuf[i], out);
-                        printf("%d", binbuf[i]);
+                        //printf("%d", binbuf[i]);
                     }
-                    //t = false;
-                }
+                    //show++;
+                    //printf(" ");
+                //}
                 count++;
             }
             printf("\n%d byte read.\n",count);
-            printf("Create a output file successfully.");
+            printf("Create a output file successfully.\n");
             test = true;
         } else{
-            printf("Can't create a output file.");
-            perror("Error");
+            printf("Can't create a output file.\n");
+            //perror("Error");
         }
         fclose(dir);
         fclose(out);
     }
-
+/*
     if (test){
 
         FILE *cmess;
@@ -58,45 +62,89 @@ int main() {
             printf("Read message successfully.\n");
 
         } else{
-            printf("Can't read message file.");
-            perror("Error");
+            printf("Can't read message file.\n");
+            //perror("Error");
         }
 
     } else{
 
     }
-
+*/
 
 
 
 /*
  *  output file check
- *
+ *  If it can be converted back to original jpg that binary algorithm is correct.
+ *  Yes! It works!
+ */
+    FILE *outback;
+    show = 0;
     outtest = fopen("../out.txt","rb");
-
+    outback = fopen("../out.jpg","wb+");
     if (outtest == NULL){
         perror("Error");
     } else{
         printf("\nStart checking output file...\n");
-        while ((co=fgetc(outtest))!=EOF){
-            printf("%d",co);
+        int obitc = 8, p = 0b00000000;
+        int buf[obitc];
+        while ((c=fgetc(outtest))!=EOF){
+
+            buf[obitc-1] = c;
+
+            //if (show <=31) printf("%d",c);
+            //show++;
+
+            if (obitc == 1){
+                obitc = 8;
+                for (int i = 0; i < 8; ++i) {
+
+                    if (show <=31)printf("%d",buf[i]);
+                    show++;
+
+                    if (buf[i]!=0){
+                        p = p | (1 << i);
+                    }
+                }
+                //if (show <=16) printf("%d ",p);
+                printf(" "),
+                //show ++;
+                fputc(p,outback);
+                p = 0b00000000;
+
+            } else{
+                obitc--;
+            }
+
         }
+
     }
-*/
+    fclose(outback);
+    fclose(outtest);
+
 
 /*
  *  binary convert test
  *
-    int bin[64];
-    long long inp =9223372036854775807;
+    int bin[buffersize], p=0b00000000;
+    int inp =90;
     printf("\n");
     printf("Binary: ");
+    char b[10]="0b00001001";
     binaryn(bin,inp);
 
-    for (int i = 0; i < sizeof inp * CHAR_BIT; ++i)
+    for (int i = 0; i < buffersize; ++i){
         printf("%d", bin[i]);
+        if (bin[i]!=0){
+            p = p | (1 << (7-i));
+        }
+    }
 
+    printf("\nString: %s\n",b);
+    printf("pa: %p\n",&p);
+    printf("pv: %d\n",p);
 */
+
 
 /*
  *  << test
