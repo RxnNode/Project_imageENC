@@ -2,53 +2,76 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <MacTypes.h>
+#define INT_BIT 2
 
 
 void binaryn(int *ptr, int n){
-    for (int i = sizeof(n)*CHAR_BIT - 1; i >= 0; --i) {
+    for (int i = sizeof(n)*INT_BIT - 1; i >= 0; --i) {
         *ptr++ = (n>>i) & 1;
     }
 }
 int main() {
 
-
-
-
     FILE *dir;
     FILE *out;
     FILE *outtest;
-    int c,co;
-    Boolean test = true;
+    int c,co,count=0;
+    Boolean test = false, t = true;
 
     dir = fopen("../images/image.jpg","r+b");
 
     if (dir== NULL){
+        printf("Can't read file.");
         perror("Error");
     } else{
-        printf("Read image successfully\n");
+        printf("Read image successfully.\n");
         out = fopen("../out.txt","wb+");
-        while ((c=fgetc(dir))!=EOF){
-
-
-            int binbuf[32];
-            binaryn(binbuf,c);
-            if (test){
-                for (int i = 0; i < 32; ++i){
-                    fputc(binbuf[i],out);
-                    printf("%d",binbuf[i]);
+        if (out){
+            while ((c=fgetc(dir))!=EOF) {
+                int binbuf[8];
+                binaryn(binbuf, c);
+                if (t) {
+                    for (int i = 0; i < 8; ++i) {
+                        fputc(binbuf[i], out);
+                        printf("%d", binbuf[i]);
+                    }
+                    //t = false;
                 }
-                test =false;
+                count++;
             }
-
-            printf(" ");
-
+            printf("\n%d byte read.\n",count);
+            printf("Create a output file successfully.");
+            test = true;
+        } else{
+            printf("Can't create a output file.");
+            perror("Error");
         }
-        printf("\nBBB");
         fclose(dir);
         fclose(out);
-        //perror("Error");
     }
 
+    if (test){
+
+        FILE *cmess;
+        cmess = fopen("../Enc/Enc/secret","rb+");
+        if (cmess){
+            printf("Read message successfully.\n");
+
+        } else{
+            printf("Can't read message file.");
+            perror("Error");
+        }
+
+    } else{
+
+    }
+
+
+
+
+/*
+ *  output file check
+ *
     outtest = fopen("../out.txt","rb");
 
     if (outtest == NULL){
@@ -59,9 +82,10 @@ int main() {
             printf("%d",co);
         }
     }
-
+*/
 
 /*
+ *  binary convert test
  *
     int bin[64];
     long long inp =9223372036854775807;
