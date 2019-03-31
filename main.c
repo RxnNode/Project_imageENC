@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <MacTypes.h>
+#include <setjmp.h>
+#include <jpeglib.h>
+#include <jerror.h>
 #define INT_BIT 2
 #define buffersize 8
 
@@ -10,8 +13,15 @@ void binaryn(int *ptr, int n){
         *ptr++ = (n>>i) & 1;
     }
 }
+
 int main() {
 
+
+
+
+
+
+/*
     FILE *dir, *dir2;
     FILE *out;
     FILE *outtest;
@@ -19,7 +29,7 @@ int main() {
     Boolean test = false;
 
     dir = fopen("../images/image.jpg","r+b");
-    //dir2 = fopen("../images/parrots.jpeg","r+b");
+    //dir = fopen("../images/parrots.jpeg","r+b");
 
     if (dir== NULL){
         printf("Can't read file.");
@@ -53,6 +63,8 @@ int main() {
         fclose(dir);
         fclose(out);
     }
+*/
+
 /*
     if (test){
 
@@ -77,7 +89,7 @@ int main() {
  *  output file check
  *  If it can be converted back to original jpg that binary algorithm is correct.
  *  Yes! It works!
- */
+ *
     FILE *outback;
     show = 0;
     outtest = fopen("../out.txt","rb");
@@ -121,7 +133,7 @@ int main() {
     }
     fclose(outback);
     fclose(outtest);
-
+*/
 
 /*
  *  binary convert test
