@@ -73,12 +73,18 @@ int main() {
             return -1;
         } else{
             fseek(fdir, offset, SEEK_SET);
-            int c, enc;
+            int c = 0b00000000, enc;
             while ((enc = fgetc(fenc)) != EOF){
-                //printf("int : %d", enc);
-                for (int i = 7; i >= 0; --i) {
+                //printf("Enc !!!: %d\n", enc);
+                for (int i = 7; i >= 0; i--) {
+                   
                     if ((c = fgetc(fdir)) != EOF){
-                        c = (c | ((enc & (1 << i)) << 0));
+                        /*printf("Pixel: %d\n",c);
+                        int k = (enc & (1 << i));
+                        printf("Enc 0110 0110: %d\n",k);
+                        c = c | (k >> i);
+                        printf("Pixel enc: %d\n",c); */
+                        c = c | ((enc & (1 << i)) >> i);
                         fputc(c,fout);
                     } else{
                         printf("This file is too small too hide all text file.");
