@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <MacTypes.h>
-#include <setjmp.h>
-#include <jpeglib.h>
-#include <jerror.h>
 #define INT_BIT 2
 #define buffersize 8
 
@@ -16,8 +13,125 @@ void binaryn(int *ptr, int n){
 
 int main() {
 
+/*
+ */
+
+    FILE *fdir = NULL;
+    FILE *fout = NULL;
+    FILE *fenc = NULL;
+
+    char bmp[2] = {};
+    int size = 0;
+    unsigned int offset = 0;
+    int infosize = 0;
+    int bits = 0;
 
 
+    fdir = fopen("../images/image01.bmp","rb+");
+    if (fdir){
+        //print image information
+        fread(bmp, sizeof(char), 2, fdir);
+        printf("File Type: %s\n", bmp);
+
+        fread(&size, sizeof(int), 1, fdir);
+        printf("File Size: %d byte\n", size);
+
+        fseek(fdir,10,SEEK_SET);
+        fread(&offset, sizeof(int), 1, fdir);
+        printf("Pixel start from: %d\n",offset);
+
+        fread(&infosize, sizeof(int), 1, fdir);
+        printf("Info Size: %d\n",infosize);
+
+        fseek(fdir,10,SEEK_CUR);
+        fread(&bits, 2, 1, fdir);
+        printf("Bits per pixel: %d\n",bits);
+
+        /*
+         *
+         *  Encryption start
+         *  Output file : Out.bmp
+         */
+        // Read bmp header
+        unsigned char header[offset];
+        fseek(fdir, 0, SEEK_SET);
+        fread(&header, sizeof(char), offset, fdir);
+
+        // Create output bmp file
+        fout = fopen("../out.bmp","wb+");
+        if (fout == NULL){
+            printf("Can't create Output file.");
+            return -1;
+        } else{
+            // Write header into Output file.
+            fwrite(header, sizeof(unsigned char), offset, fout);
+        }
+        //  Read enc text file
+        fenc = fopen("../Enc/short","rb");
+        if (fenc == NULL){
+            printf("Can't not read text file.");
+            return -1;
+        } else{
+            fseek(fdir, offset, SEEK_SET);
+            int c, enc;
+            while ((enc = fgetc(fenc)) != EOF){
+                //printf("int : %d", enc);
+                for (int i = 7; i >= 0; --i) {
+                    if ((c = fgetc(fdir)) != EOF){
+                        c = (c | ((enc & (1 << i)) << 0));
+                        fputc(c,fout);
+                    } else{
+                        printf("This file is too small too hide all text file.");
+                        return 1;
+                    }
+                }
+            }
+            // Add rest of pixels
+            while ((c = fgetc(fdir)) != EOF){
+
+                fputc(c,fout);
+            }
+        }
+        fclose(fdir);
+        fclose(fenc);
+        fclose(fout);
+    } else{
+        printf("Can't read file.\n");
+        perror("Error");
+        return -1;
+    }
+
+   /*
+    *  Decryption
+    *  Output file : dec.text
+    *
+    */
+
+    FILE *dec;
+
+    fout = fopen("../out.bmp","rb+");
+    if ( fout == NULL){
+        printf("Can't find output file. Decryption terminated.");
+        return -1;
+    } else{
+         dec = fopen("../dec.txt","wb+");
+         fseek(fout, offset, SEEK_SET);
+         if (dec == NULL){
+            printf("Can't create decrypted file.");
+             return -1;
+         } else{
+             int oc, dc = 0b00000000;
+             while((oc = fgetc(fout)) != EOF){
+                 dc = dc | ((oc & (1 << 0)) << 7);
+                 for (int i = 6; i >= 0 ; --i) {
+                     if((oc = fgetc(fout)) != EOF)
+                     dc = dc | ((oc & (1 << 0)) << i);
+                 }
+                 fputc(dc, dec);
+             }
+         }
+
+    }
 
 
 
@@ -168,7 +282,8 @@ int main() {
     printf("\nSP : %d",(12 & (1<<0)));
     printf("\nSP : %d",(12 & (1<<1)));
     printf("\nSP : %d",(12 & (1<<2)));
-    printf("\nSP : %d",(951 & (1<<9)));
+    printf("\nSP : %d",(12 & (1<<3)));
+
 */
 
 /*
