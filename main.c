@@ -19,6 +19,7 @@ int main() {
     FILE *fdir = NULL;
     FILE *fout = NULL;
     FILE *fenc = NULL;
+    FILE *enct = NULL;
 
     char bmp[2] = {};
     int size = 0;
@@ -59,6 +60,7 @@ int main() {
 
         // Create output bmp file
         fout = fopen("../out.bmp","wb+");
+        //enct = fopen("../outt","wb+");
         if (fout == NULL){
             printf("Can't create Output file.");
             return -1;
@@ -67,33 +69,38 @@ int main() {
             fwrite(header, sizeof(unsigned char), offset, fout);
         }
         //  Read enc text file
-        fenc = fopen("../Enc/short","rb");
+        fenc = fopen("../Enc/secret","rb");
         if (fenc == NULL){
             printf("Can't not read text file.");
             return -1;
         } else{
             fseek(fdir, offset, SEEK_SET);
-            int c = 0b00000000, enc;
-            while ((enc = fgetc(fenc)) != EOF){
-                //printf("Enc !!!: %d\n", enc);
+            unsigned int c, enc, show = 0, show2 = 0;
+            while ((enc = (unsigned)fgetc(fenc)) != EOF){
+               if(show2 < 10) printf("Enc !!!: %d\n", enc);
+
                 for (int i = 7; i >= 0; i--) {
                    
-                    if ((c = fgetc(fdir)) != EOF){
-                        /*printf("Pixel: %d\n",c);
-                        int k = (enc & (1 << i));
-                        printf("Enc 0110 0110: %d\n",k);
+                    if ((c = (unsigned)fgetc(fdir)) != EOF){
+                        //printf("Pixel: %d\n",c);
+                        unsigned int k = (enc & (1 << i));
+
+                        //printf("Enc 0110 0110: %d\n",k);
                         c = c | (k >> i);
-                        printf("Pixel enc: %d\n",c); */
-                        c = c | ((enc & (1 << i)) >> i);
+                        if(show < 10) printf("Pixel enc: %d\n",c);
+                        show++;
+                        //c = c | ((enc & (1 << i)) >> i);
                         fputc(c,fout);
+
                     } else{
                         printf("This file is too small too hide all text file.");
                         return 1;
                     }
                 }
+                show2++;
             }
             // Add rest of pixels
-            while ((c = fgetc(fdir)) != EOF){
+            while ((c = (unsigned)fgetc(fdir)) != EOF){
 
                 fputc(c,fout);
             }
@@ -120,20 +127,35 @@ int main() {
         printf("Can't find output file. Decryption terminated.");
         return -1;
     } else{
+
          dec = fopen("../dec.txt","wb+");
-         fseek(fout, offset, SEEK_SET);
          if (dec == NULL){
             printf("Can't create decrypted file.");
              return -1;
          } else{
-             int oc, dc = 0b00000000;
-             while((oc = fgetc(fout)) != EOF){
-                 dc = dc | ((oc & (1 << 0)) << 7);
-                 for (int i = 6; i >= 0 ; --i) {
-                     if((oc = fgetc(fout)) != EOF)
-                     dc = dc | ((oc & (1 << 0)) << i);
-                 }
-                 fputc(dc, dec);
+             unsigned int oc, dc = 0b00000000, show = 0;
+             fseek(fout, offset, SEEK_SET);
+             while((oc = (unsigned)fgetc(fout)) != EOF){
+                    
+                         //printf("OC: %d\n",oc);
+                         oc = oc & 1;
+                         //printf("OC & 1: %d\n",oc);
+                         dc = dc | (oc << 7);
+                          //printf("DC7: %d\n",dc);
+                         for (int i = 6; i >= 0 ; i--) {
+                            oc = (unsigned)fgetc(fout);
+                            oc = oc & 1;
+                            dc = dc | (oc << i);
+                             //printf("DC%d: %d\n",i,dc);
+                         }
+
+                         //printf("DC000====: %d\n",dc);
+
+
+                     fputc(dc, dec);
+                     dc = 0b00000000;
+                     oc = 0b00000000;
+
              }
          }
 
