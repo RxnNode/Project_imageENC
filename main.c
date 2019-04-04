@@ -60,7 +60,7 @@ int main() {
 
         // Create output bmp file
         fout = fopen("../out.bmp","wb+");
-        //enct = fopen("../outt","wb+");
+        enct = fopen("../outt","wb+");
         if (fout == NULL){
             printf("Can't create Output file.");
             return -1;
@@ -84,7 +84,7 @@ int main() {
                     if ((c = (unsigned)fgetc(fdir)) != EOF){
                         //printf("Pixel: %d\n",c);
                         unsigned int k = (enc & (1 << i));
-
+                        
                         //printf("Enc 0110 0110: %d\n",k);
                         c = c | (k >> i);
                         if(show < 10) printf("Pixel enc: %d\n",c);
@@ -135,7 +135,13 @@ int main() {
          } else{
              unsigned int oc, dc = 0b00000000, show = 0;
              fseek(fout, offset, SEEK_SET);
-             while((oc = (unsigned)fgetc(fout)) != EOF){
+             for (int oc = (unsigned)fgetc(fout); oc != EOF ; oc = (unsigned)fgetc(fout)) {
+                 for (int i = 6; i >=0 ; i--) {
+                     oc = oc & 1;
+                     dc = dc | (oc << i);
+                 }
+             }
+             /*while((oc = (unsigned)fgetc(fout)) != EOF){
                     
                          //printf("OC: %d\n",oc);
                          oc = oc & 1;
@@ -156,7 +162,7 @@ int main() {
                      dc = 0b00000000;
                      oc = 0b00000000;
 
-             }
+             }*/
          }
 
     }
