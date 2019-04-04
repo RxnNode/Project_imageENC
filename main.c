@@ -60,7 +60,7 @@ int main() {
 
         // Create output bmp file
         fout = fopen("../out.bmp","wb+");
-        enct = fopen("../outt","wb+");
+        //enct = fopen("../outt","wb+");
         if (fout == NULL){
             printf("Can't create Output file.");
             return -1;
@@ -75,21 +75,22 @@ int main() {
             return -1;
         } else{
             fseek(fdir, offset, SEEK_SET);
-            unsigned int c, enc, show = 0, show2 = 0;
+            unsigned int c, enc, mask = 0b11111110, show = 0, show2 = 0;
             while ((enc = (unsigned)fgetc(fenc)) != EOF){
-               if(show2 < 10) printf("Enc !!!: %d\n", enc);
+               //if(show2 < 10) printf("Enc !!!: %d\n", enc);
 
                 for (int i = 7; i >= 0; i--) {
                    
                     if ((c = (unsigned)fgetc(fdir)) != EOF){
                         //printf("Pixel: %d\n",c);
-                        unsigned int k = (enc & (1 << i));
-                        
+                        //unsigned int k = (enc & (1 << i));
+
                         //printf("Enc 0110 0110: %d\n",k);
-                        c = c | (k >> i);
-                        if(show < 10) printf("Pixel enc: %d\n",c);
-                        show++;
-                        //c = c | ((enc & (1 << i)) >> i);
+                        //c = c & mask;
+                        //c = c | (k >> i);
+                        //if(show < 10) printf("Pixel enc: %d\n",c);
+                        //show++;
+                        c = (c & mask) | ((enc & (1 << i)) >> i);
                         fputc(c,fout);
 
                     } else{
@@ -97,7 +98,7 @@ int main() {
                         return 1;
                     }
                 }
-                show2++;
+                //show2++;
             }
             // Add rest of pixels
             while ((c = (unsigned)fgetc(fdir)) != EOF){
@@ -135,13 +136,13 @@ int main() {
          } else{
              unsigned int oc, dc = 0b00000000, show = 0;
              fseek(fout, offset, SEEK_SET);
-             for (int oc = (unsigned)fgetc(fout); oc != EOF ; oc = (unsigned)fgetc(fout)) {
+             /*for (int oc = (unsigned)fgetc(fout); oc != EOF ; oc = (unsigned)fgetc(fout)) {
                  for (int i = 6; i >=0 ; i--) {
                      oc = oc & 1;
                      dc = dc | (oc << i);
                  }
-             }
-             /*while((oc = (unsigned)fgetc(fout)) != EOF){
+             }*/
+             while((oc = (unsigned)fgetc(fout)) != EOF){
                     
                          //printf("OC: %d\n",oc);
                          oc = oc & 1;
@@ -162,7 +163,7 @@ int main() {
                      dc = 0b00000000;
                      oc = 0b00000000;
 
-             }*/
+             }
          }
 
     }
