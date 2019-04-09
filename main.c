@@ -67,7 +67,7 @@ int enc(const char *picname, const char *hfile){
         char outname[17];
         printf("Please enter output file name(alphabetic): ");
         if(scanf("%10s",outbuff) != EOF){
-            snprintf(outname, sizeof(outname) ,"../%s.bmp", outbuff);
+            snprintf(outname, sizeof(outname) ,"%s.bmp", outbuff);
             printf("Your output file name: %s\n",outname);
             printf("============================================\n");
         } else{
@@ -141,7 +141,7 @@ int dec(const char *dpic){
         return -1;
     } else{
 
-        dec = fopen("../dec.txt","wb+");
+        dec = fopen("dec.txt","wb+");
         if (dec == NULL){
             printf("Can't create decrypted file.\n");
             printf("============================================\n");
