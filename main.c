@@ -1,171 +1,229 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
-#include <MacTypes.h>
 #define INT_BIT 2
 #define buffersize 8
 
-void binaryn(int *ptr, int n){
+unsigned int offset = 0;
+
+/*void binaryn(int *ptr, int n){
     for (int i = sizeof(n)*INT_BIT - 1; i >= 0; --i) {
         *ptr++ = (n>>i) & 1;
     }
-}
+}*/
 
-int main() {
-
-/*
- */
+int enc(const char *picname, const char *hfile){
 
     FILE *fdir = NULL;
     FILE *fout = NULL;
     FILE *fenc = NULL;
-    FILE *enct = NULL;
 
     char bmp[2] = {};
     int size = 0;
-    unsigned int offset = 0;
+
     int infosize = 0;
     int bits = 0;
 
+    fdir = fopen(picname,"rb+");
 
-    fdir = fopen("../images/image01.bmp","rb+");
-    if (fdir){
-        //print image information
+    //print image information
+    if (fdir) {
+        printf("===============Image Information============\n");
         fread(bmp, sizeof(char), 2, fdir);
         printf("File Type: %s\n", bmp);
 
         fread(&size, sizeof(int), 1, fdir);
         printf("File Size: %d byte\n", size);
 
-        fseek(fdir,10,SEEK_SET);
+        fseek(fdir, 10, SEEK_SET);
         fread(&offset, sizeof(int), 1, fdir);
-        printf("Pixel start from: %d\n",offset);
+        printf("Pixel start from: %d\n", offset);
 
         fread(&infosize, sizeof(int), 1, fdir);
-        printf("Info Size: %d\n",infosize);
+        printf("Info Size: %d\n", infosize);
 
-        fseek(fdir,10,SEEK_CUR);
+        fseek(fdir, 10, SEEK_CUR);
         fread(&bits, 2, 1, fdir);
-        printf("Bits per pixel: %d\n",bits);
+        printf("Bits per pixel: %d\n", bits);
+        printf("============================================\n");
+    } else{
+        printf("Can't read file.\n");
+        return -1;
+    }
 
-        /*
-         *
-         *  Encryption start
-         *  Output file : Out.bmp
-         */
+    /*
+     *
+     *  Encryption start
+     *  Output file : Out.bmp
+     *
+     */
+
         // Read bmp header
         unsigned char header[offset];
         fseek(fdir, 0, SEEK_SET);
         fread(&header, sizeof(char), offset, fdir);
 
         // Create output bmp file
-        fout = fopen("../out.bmp","wb+");
-        //enct = fopen("../outt","wb+");
+        char outbuff[15];
+        char outname[17];
+        printf("Please enter output file name(alphabetic): ");
+        if(scanf("%10s",outbuff) != EOF){
+            snprintf(outname, sizeof(outname) ,"../%s.bmp", outbuff);
+            printf("Your output file name: %s\n",outname);
+            printf("============================================\n");
+        } else{
+            printf("Failed to create output file.\n");
+            printf("============================================\n");
+            return -1;
+        }
+        fout = fopen(outname,"wb+");
         if (fout == NULL){
-            printf("Can't create Output file.");
+            printf("Can't create output file.\n");
+            printf("============================================\n");
             return -1;
         } else{
             // Write header into Output file.
             fwrite(header, sizeof(unsigned char), offset, fout);
+            printf("Bmp header writing...\n");
         }
+
         //  Read enc text file
-        fenc = fopen("../Enc/secret","rb");
+        fenc = fopen(hfile,"rb");
+
         if (fenc == NULL){
-            printf("Can't not read text file.");
+            printf("Can't not read text file.\n");
+            printf("============================================\n");
             return -1;
         } else{
             fseek(fdir, offset, SEEK_SET);
-            unsigned int c, enc, mask = 0b11111110, show = 0, show2 = 0;
+            unsigned int c, enc, mask = 0b11111110;
+
             while ((enc = (unsigned)fgetc(fenc)) != EOF){
-               //if(show2 < 10) printf("Enc !!!: %d\n", enc);
-
                 for (int i = 7; i >= 0; i--) {
-                   
-                    if ((c = (unsigned)fgetc(fdir)) != EOF){
-                        //printf("Pixel: %d\n",c);
-                        //unsigned int k = (enc & (1 << i));
-
-                        //printf("Enc 0110 0110: %d\n",k);
-                        //c = c & mask;
-                        //c = c | (k >> i);
-                        //if(show < 10) printf("Pixel enc: %d\n",c);
-                        //show++;
+                    if ((c = (unsigned) fgetc(fdir)) != EOF) {
                         c = (c & mask) | ((enc & (1 << i)) >> i);
-                        fputc(c,fout);
-
-                    } else{
-                        printf("This file is too small too hide all text file.");
+                        fputc(c, fout);
+                    } else {
+                        printf("This file is too small too hide all text file.\n");
+                        printf("============================================\n");
                         return 1;
                     }
                 }
-                //show2++;
             }
+            printf("Writing ...\n");
             // Add rest of pixels
             while ((c = (unsigned)fgetc(fdir)) != EOF){
-
                 fputc(c,fout);
             }
         }
         fclose(fdir);
         fclose(fenc);
         fclose(fout);
-    } else{
-        printf("Can't read file.\n");
-        perror("Error");
-        return -1;
-    }
+        fflush(stdin);
+        printf("Done!\n");
+    printf("============================================\n");
+}
 
-   /*
-    *  Decryption
-    *  Output file : dec.text
-    *
-    */
+int dec(const char *dpic){
 
-    FILE *dec;
+    /*
+     *  Decryption
+     *  Output file : dec.text
+     *
+     */
 
-    fout = fopen("../out.bmp","rb+");
+    FILE *dec = NULL;
+    FILE *fout = NULL;
+
+    fout = fopen(dpic,"rb+");
     if ( fout == NULL){
-        printf("Can't find output file. Decryption terminated.");
+        printf("Can't find output file. Decryption terminated.\n");
+        printf("============================================\n");
         return -1;
     } else{
 
-         dec = fopen("../dec.txt","wb+");
-         if (dec == NULL){
-            printf("Can't create decrypted file.");
-             return -1;
-         } else{
-             unsigned int oc, dc = 0b00000000, show = 0;
-             fseek(fout, offset, SEEK_SET);
-             /*for (int oc = (unsigned)fgetc(fout); oc != EOF ; oc = (unsigned)fgetc(fout)) {
-                 for (int i = 6; i >=0 ; i--) {
-                     oc = oc & 1;
-                     dc = dc | (oc << i);
-                 }
-             }*/
-             while((oc = (unsigned)fgetc(fout)) != EOF){
-                    
-                         //printf("OC: %d\n",oc);
-                         oc = oc & 1;
-                         //printf("OC & 1: %d\n",oc);
-                         dc = dc | (oc << 7);
-                          //printf("DC7: %d\n",dc);
-                         for (int i = 6; i >= 0 ; i--) {
-                            oc = (unsigned)fgetc(fout);
-                            oc = oc & 1;
-                            dc = dc | (oc << i);
-                             //printf("DC%d: %d\n",i,dc);
-                         }
+        dec = fopen("../dec.txt","wb+");
+        if (dec == NULL){
+            printf("Can't create decrypted file.\n");
+            printf("============================================\n");
+            return -1;
+        } else{
+            unsigned int oc, dc = 0b00000000;
+            fseek(fout, offset, SEEK_SET);
+            while((oc = (unsigned)fgetc(fout)) != EOF){
 
-                         //printf("DC000====: %d\n",dc);
+                oc = oc & 1;
+                dc = dc | (oc << 7);
+                for (int i = 6; i >= 0 ; i--) {
+                    oc = (unsigned)fgetc(fout);
+                    oc = oc & 1;
+                    dc = dc | (oc << i);
+                }
+                fputc(dc, dec);
+                dc = 0b00000000;
+                oc = 0b00000000;
 
+            }
+        }
+        printf("Decryption Done!\n");
+        printf("============================================\n");
+    }
+}
 
-                     fputc(dc, dec);
-                     dc = 0b00000000;
-                     oc = 0b00000000;
+int main() {
 
-             }
-         }
+    char s = 0;
 
+    printf("==============Image En/Decryption===========\n");
+    printf("1. Enc 2. Dec?: ");
+
+    while (scanf("%1c",&s)){
+        char path[256];
+        char fpath[256];
+
+        if (s == '1'){
+            printf("============================================\n");
+            printf("Please enter image(bmp) full path & file name(alphabetic): ");
+
+            if( scanf("%255s",path) != EOF){
+                printf("Your image file: %s\n", path);
+                printf("============================================\n");
+                printf("Please enter full path & file name(alphabetic) of file: ");
+
+                if(scanf("%255s",fpath) != EOF){
+                    printf("Your image file: %s\n",fpath);
+                    printf("============================================\n");
+                } else{
+                    printf("Failed to read file.\n");
+                    printf("============================================\n");
+                    return -1;
+                }
+            } else{
+                printf("Failed to read image file.\n");
+                printf("============================================\n");
+                return -1;
+            }
+
+            enc(path,fpath);
+
+        } else if ( s == '2'){
+            printf("============================================\n");
+            printf("Please enter Encrypted image(bmp) full path & file name(alphabetic): ");
+            if(scanf("%255s",path) != EOF){
+                printf("Your Encrypted image file: %s\n", path);
+                printf("============================================\n");
+            } else{
+                printf("Failed to read image file.\n");
+                printf("============================================\n");
+                return -1;
+            }
+
+            dec(path);
+
+        } else{
+            printf("only 1 or 2\n");
+            printf("============================================\n");
+        }
+        s = '0';
     }
 
 
