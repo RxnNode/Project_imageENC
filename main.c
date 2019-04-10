@@ -171,7 +171,7 @@ int dec(const char *dpic){
 
 int main() {
 
-    char s = 0;
+    char s = '0';
 
     printf("==============Image En/Decryption===========\n");
     printf("1. Enc 2. Dec?: ");
