@@ -15,5 +15,4 @@
 - [x] Read files into binary
 - [x] Add files to images
 - [ ] Support all kinds of BMP files
-- [ ] Support jepg
-- [ ] Support png
+- [ ] Convert .jepg .png to .bmp
