@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <opencv4/op>
 #define INT_BIT 2
 #define buffersize 8
 
@@ -171,7 +170,17 @@ int dec(const char *dpic){
 }
 
 int main() {
+    Mat img = imread("lena.jpg");
+    if (img.empty()) {
+        cout << "Error" << endl;
+        return -1;
+    }
+    imshow("Lena", img);
+    waitKey();
+    return 0;
 
+
+    /*
     char s = '0';
 
     printf("==============Image En/Decryption===========\n");
@@ -224,7 +233,7 @@ int main() {
             printf("only 1 or 2\n");
             printf("============================================\n");
         }
-        s = '0';
+        s = '0';*/
     }
 
 
