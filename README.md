@@ -14,5 +14,9 @@
 - [x] Read images(32bits) into binary  
 - [x] Read files into binary
 - [x] Add files to images
+- [x] Install OpenCV
 - [ ] Support all kinds of BMP files
-- [ ] Convert .jepg .png to .bmp
+- [ ] Convert .jepg .png to 32bits bmp
+- [ ] 1 - 8 encryption
+- [ ] make bits matrix files
+- [ ] PSNR
