@@ -3,6 +3,7 @@
 #define INT_BIT 2
 #define buffersize 8
 
+
 unsigned int offset = 0;
 
 /*void binaryn(int *ptr, int n){
