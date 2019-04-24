@@ -12,14 +12,8 @@
 unsigned int offset = 0;
 
 int main() {
-    cv::VideoCapture cap(0);
-    cv::Mat frame;
-    while (1){
-        cap >> frame;
-        imshow("fdsf", frame);
-        cv::waitKey(0);
 
-    }
+    cv::Mat imgin = cv::imread("")
 
 
     return 0;
