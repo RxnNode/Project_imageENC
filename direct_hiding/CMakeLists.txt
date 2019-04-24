@@ -10,6 +10,6 @@ find_package(OpenCV REQUIRED)
 include_directories(/usr/local/include)
 
 
-add_executable(Enc ${SOURCE_FILES})
+add_executable(direct_hiding ${SOURCE_FILES})
 
-target_link_libraries(Enc ${OpenCV_LIBS})
+target_link_libraries(direct_hiding ${OpenCV_LIBS})
