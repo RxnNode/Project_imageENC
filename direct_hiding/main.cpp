@@ -13,7 +13,12 @@ unsigned int offset = 0;
 
 int main() {
 
-    cv::Mat imgin = cv::imread("")
+    cv::Mat imgin = cv::imread("../images/image.jpg",-1);
+    cv::Mat imgbmp;
+    imgbmp.convertTo(imgbmp, CV_32SC4);
+    cv::imwrite("imageout.bmp", imgbmp);
+    //cv::imshow("hi",imgin);
+    //cv::waitKey(0);
 
 
     return 0;
