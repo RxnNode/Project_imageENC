@@ -1,6 +1,4 @@
-//
-// Created by Yung-An Jen on 2019-04-25.
-//
+
 
 #ifndef ENC_IMG_CONVERT_H
 #define ENC_IMG_CONVERT_H
