@@ -13,12 +13,12 @@
 
 int main() {
 
-    convertoBMP("../images/image.jpg","outimage.bmp");
-    
+    convertoBMP("../images/image.bmp","outimg.bmp");
 
 
-    //cv::imshow("hi",imgin);
-    //cv::waitKey(0);
+
+
+
 
 
     return 0;
