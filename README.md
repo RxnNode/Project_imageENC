@@ -16,7 +16,7 @@
 - [x] Add files to images
 - [x] Install OpenCV
 - [ ] Support all kinds of BMP files
-- [ ] Convert .jepg .png to 32bits bmp
+- [x] Convert .jepg .png to 32bits bmp
 - [ ] 1 - 8 encryption
 - [ ] make bits matrix files
 - [ ] PSNR
