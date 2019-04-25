@@ -13,8 +13,8 @@
 
 int main() {
 
-    convertoBMP("../images/image.bmp","outimage.bmp");
-
+    convertoBMP("../images/image.jpg","outimage.bmp");
+    
 
 
     //cv::imshow("hi",imgin);
