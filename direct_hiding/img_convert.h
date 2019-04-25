@@ -66,8 +66,8 @@ int convertoBMP(const char *srcname, const char *disname){
     cv::Mat imgin = cv::imread(srcname);
     cv::Mat imgbmp32b;
     cv::Mat imgbmp32bc4;
-    imgin.convertTo(imgbmp32b, CV_32SC4);
-    //cv::cvtColor(imgbmp32b, imgbmp32bc4, cv::COLOR_BGRA2RGBA, 0);
-    cv::imwrite(disname, imgbmp32b);
+    imgin.convertTo(imgbmp32b, CV_16UC3);
+    cv::cvtColor(imgbmp32b, imgbmp32bc4, cv::COLOR_BGR2BGRA, 0);
+    cv::imwrite(disname, imgbmp32bc4);
     return 0;
 }
