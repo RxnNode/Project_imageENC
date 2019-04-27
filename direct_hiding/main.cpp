@@ -72,6 +72,9 @@ int enc(const char *img, const char *enc){
             fputc(c,fout);
         }
     }
+    fclose(imgr);
+    fclose(enct);
+    fclose(fout);
 
 }
 
@@ -80,7 +83,13 @@ int dec(const char *srcenc){
 
 }
 
+int makemultpic(int n){
+    FILE *test = NULL;
+    for (int i = 0; i < n; ++i) {
+        test = fopen("../out","rb+");
 
+    }
+}
 int main() {
 
     convertoBMP("../images/image.jpg","../images/img.bmp");
