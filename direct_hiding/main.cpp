@@ -4,6 +4,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "img_convert.h"
 
 
@@ -33,6 +35,7 @@ int enc(const char *img, const char *enc){
     /*
      *  Output file
      */
+
     fout = fopen("../images/enc.bmp","wb+");
     if (fout == NULL){
         printf("Can't create output file.\n");
@@ -45,7 +48,7 @@ int enc(const char *img, const char *enc){
     }
 
     /*
-     *  text file
+     *  Read text file and write output file
      */
     enct = fopen("../text_source/secret","rb");     //Read text file
     if (enct == NULL){
@@ -53,19 +56,29 @@ int enc(const char *img, const char *enc){
         return -1;
     } else{
         fseek(enct, offset, SEEK_SET);
-        unsigned int c, enc, mask = 0b11111110;
+        unsigned int c, enc, mask[8] = { 0b11111110,
+                                         0b11111100,
+                                         0b11111000,
+                                         0b11110000,
+                                         0b11100000,
+                                         0b11000000,
+                                         0b10000000,
+                                         0b00000000};
+        for (int j = 0; j < 8; ++j) {
 
-        while ((enc = (unsigned)fgetc(enct)) != EOF){
-            for (int i = 7; i >= 0; i--) {
-                if ((c = (unsigned) fgetc(imgr)) != EOF) {
-                    c = (c & mask) | ((enc & (1 << i)) >> i);
-                    fputc(c, fout);
-                } else {
-                    printf("This file is too small too hide all text file.\n");
-                    return 1;
+            while ((enc = (unsigned)fgetc(enct)) != EOF){
+                for (int i = 7; i >= 0; i--) {
+                    if ((c = (unsigned) fgetc(imgr)) != EOF) {
+                        c = (c & mask[j]) | ((enc & (1 << i)) >> i);
+                        fputc(c, fout);
+                    } else {
+                        printf("This file is too small too hide all text file.\n");
+                        return 1;
+                    }
                 }
             }
         }
+
         printf("Writing ...\n");
         // Add rest of pixels
         while ((c = (unsigned)fgetc(imgr)) != EOF){
@@ -83,19 +96,28 @@ int dec(const char *srcenc){
 
 }
 
-int makemultpic(int n){
-    FILE *test = NULL;
-    for (int i = 0; i < n; ++i) {
-        test = fopen("../out","rb+");
+void makemultpic(int n){
+    FILE *test[n];
+    struct stat st = {0};
+    if (stat("../out",&st) == -1){
+        mkdir("../out",0777);
+    } else{
+        printf("Out is already there!!");
+    }
+    for (int i = 0; i < n; i++) {
+        char filename[32];
+        sprintf(filename,"../out/out_%d.bmp",i);
+        test[i] = fopen(filename,"wb");
 
     }
 }
 int main() {
 
-    convertoBMP("../images/image.jpg","../images/img.bmp");
+    //convertoBMP("../images/image.jpg","../images/img.bmp");
 
-    enc("../images/img.bmp","text_source/secret");
+    //enc("../images/img.bmp","text_source/secret");
 
+    makemultpic(20);
 
 
 
