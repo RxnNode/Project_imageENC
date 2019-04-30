@@ -58,7 +58,7 @@ int enc(const char *img, const char *enc){
     } else{
         fseek(enct, offset, SEEK_SET);
         unsigned int c, enc;
-        unsigned int mask[8] = { 0b11111110,
+        unsigned int maskm[8] = { 0b11111110,
                                  0b11111100,
                                  0b11111000,
                                  0b11110000,
@@ -66,6 +66,14 @@ int enc(const char *img, const char *enc){
                                  0b11000000,
                                  0b10000000,
                                  0b00000000 },
+                     masl[8] = { 0b11111110,
+                                 0b11111101,
+                                 0b11111011,
+                                 0b11110111,
+                                 0b11101111,
+                                 0b11011111,
+                                 0b10111111,
+                                 0b01111111 },
                      shift[8] = { 0b00000001,
                                   0b00000011,
                                   0b00000111,
@@ -98,9 +106,12 @@ int enc(const char *img, const char *enc){
             }
 
             while ((enc = (unsigned)fgetc(enct)) != EOF){
-                for (int i = 8/(j+1) - 1; i >= 0; i--) {
+                for (int i = 7; i >= 0; i--) {
                     if ((c = (unsigned) fgetc(imgr)) != EOF) {
-                        c = (c & mask[j]) | ((enc & (1 << i)) >> i);
+                        for (int k = j; k >= 0; k--) {
+                            i-=k*2;
+                            c = (c & masl[k]) | ((enc & (1 << i)) >> i);
+                        }
                         fputc(c, fout[j]);
                     } else {
                         printf("This file is too small too hide all text file.\n");
@@ -153,10 +164,10 @@ int main() {
     //makemultpic(20);
 
 
-    printf("%d", 1<<1);
-    printf("%d", 1<<2);
-    printf("%d", 1<<3);
-    printf("%d", 1<<4);
+    printf("%d ", 0b00000011<<0);
+    printf("%d ", 0b00000011<<6);
+    printf("%d ", 0b00000011<<4);
+    printf("%d ", 0b00000011<<2);
 
 
 
