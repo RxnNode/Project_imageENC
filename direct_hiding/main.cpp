@@ -16,8 +16,8 @@ int enc(const char *img, const char *enc){
     unsigned char header[offset];
     FILE *imgr = nullptr;
     FILE *enct = nullptr;
-    FILE *fout[8];
-    FILE *log = NULL;
+    FILE *fout = nullptr;
+    FILE *log = nullptr;
     char logc[64];
 
     log = fopen("../log.txt","w");
@@ -60,8 +60,7 @@ int enc(const char *img, const char *enc){
         printf("Can't not read text file.\n");
         return -1;
     } else{
-        fseek(enct, offset, SEEK_SET);
-        unsigned int c, enc;
+        unsigned int c, ec, m =  0b11111110;
         unsigned int mask[8] = { 0b11111110,
                                  0b11111100,
                                  0b11111000,
@@ -86,9 +85,16 @@ int enc(const char *img, const char *enc){
                                   0b00111111,
                                   0b01111111,
                                   0b11111111};  //magic
+
+
+
         //1 to 8 bits hiding
         for (int j = 0; j < 8; ++j) {
-            fseek(enct, offset, SEEK_SET);
+
+            //fseek(imgr, offset, SEEK_SET);  // reset source image to offset
+            fseek(enct, 0, SEEK_SET);   // reset text file to start
+
+            // check folder
             struct stat st = {0};
             if (stat("../out",&st) == -1){
                 mkdir("../out",0777);
@@ -96,45 +102,47 @@ int enc(const char *img, const char *enc){
                 printf("Out is already there!!\n");
             }
 
+            // Create multiple files
             char filename[32];
             sprintf(filename,"../out/out_%d.bmp",j);
-            fout[j] = fopen(filename,"wb+");
-            if (fout[j] == nullptr){
+            fout = fopen(filename,"wb+");
+            if (fout == nullptr){
                 printf("Can't create output file.\n");
                 return -1;
             } else{
                 fseek(imgr, 0, SEEK_SET);
                 fread(&header, sizeof(char), offset, imgr);     //Read header
-                fwrite(header, sizeof(unsigned char), offset, fout[j]);    // Write header into Output file.
+                fwrite(header, sizeof(unsigned char), offset, fout);    // Write header into Output file.
                 printf("%d Bmp header writing...\n",j);
             }
 
-            while ((enc = (unsigned)fgetc(enct)) != EOF){
+            // start hiding
+            while ((ec = (unsigned)fgetc(enct)) != EOF){
                 for (int i = 7; i >= 0; i--) {
                     if ((c = (unsigned) fgetc(imgr)) != EOF) {
                        // for (int k = 0; k <= j; k++) {
                             //i = i-k;
-                            c = (c & mask[0]) | ((enc & (1 << i)) >> i);
-                            //printf("%dbits, %dtimes, %dshifted\n",j+1,k,i);
-                            sprintf(logc,"%dbits, %dtimes, %dshifted\n",(j+1),(1),i);
-                            fwrite(logc, sizeof(char),30,log);
+                            c = (c & m) | ((ec & (1 << i)) >> i);
+                            //sprintf(logc,"%dbits, %dtimes, %dshifted\n",(j+1),(1),i);
+                            sprintf(logc,"%d ",(c & 0b00000001));
+                            fwrite(logc, sizeof(char),10,log);
                         //}
-                        fputc(c, fout[j]);
+                        fputc(c, fout);
 
 
                     } else {
                         printf("This file is too small too hide all text file. %d \n",j);
-                        //return 1;
+                        return -1;
                     }
                 }
             }
             printf("Writing ...\n");
             // Add rest of pixels
             while ((c = (unsigned)fgetc(imgr)) != EOF){
-                fputc(c,fout[j]);
+                fputc(c,fout);
             }
 
-            fclose(fout[j]);
+            fclose(fout);
         }
 
 
@@ -145,10 +153,6 @@ int enc(const char *img, const char *enc){
 
 }
 
-int dec(const char *srcenc){
-
-
-}
 
 void makemultpic(int n){
     FILE *test[n];
@@ -167,9 +171,9 @@ void makemultpic(int n){
 }
 int main() {
 
-    convertoBMP("../images/image.jpg","../images/imgb.bmp");
+    //onvertoBMP("../images/image.jpg","../images/imgb.bmp");
 
-    enc("../images/imgb.bmp","../text_source/short");
+    enc("../images/img.bmp","../text_source/short");
 
     //makemultpic(20);
 
