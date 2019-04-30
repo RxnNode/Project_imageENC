@@ -125,20 +125,16 @@ int enc(const char *img, const char *enc){
                         rbits++;
                     } else{
                         printf("This file is too small too hide all text file.");
+                        return -1;
                     }
                 }
-                printf("%d ",tchar);
-
             }
             printf("\n");
-
-
-            printf("Writing ...\n");
+            printf("%d bits written.\n",rbits);
             // Add rest of pixels
             while ((imgchar = (unsigned)fgetc(imgr)) != EOF){
                 fputc(imgchar,fout);
             }
-
             fclose(fout);
         }
 
