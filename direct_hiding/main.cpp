@@ -55,12 +55,12 @@ int enc(const char *img, const char *enc){
     /*
      *  Read text file and write output file
      */
-    enct = fopen("../text_source/secret","rb");     //Read text file
+    enct = fopen(enc,"rb");     //Read text file
     if (enct == nullptr){
         printf("Can't not read text file.\n");
         return -1;
     } else{
-        unsigned int c, ec, m =  0b11111110;
+        unsigned int tchar, imgchar, m =  0b11111110;
         unsigned int mask[8] = { 0b11111110,
                                  0b11111100,
                                  0b11111000,
@@ -115,31 +115,28 @@ int enc(const char *img, const char *enc){
                 fwrite(header, sizeof(unsigned char), offset, fout);    // Write header into Output file.
                 printf("%d Bmp header writing...\n",j);
             }
-
+            int rbits = 0;
             // start hiding
-            while ((ec = (unsigned)fgetc(enct)) != EOF){
-                for (int i = 7; i >= 0; i--) {
-                    if ((c = (unsigned) fgetc(imgr)) != EOF) {
-                       // for (int k = 0; k <= j; k++) {
-                            //i = i-k;
-                            c = (c & m) | ((ec & (1 << i)) >> i);
-                            //sprintf(logc,"%dbits, %dtimes, %dshifted\n",(j+1),(1),i);
-                            sprintf(logc,"%d ",(c & 0b00000001));
-                            fwrite(logc, sizeof(char),10,log);
-                        //}
-                        fputc(c, fout);
-
-
-                    } else {
-                        printf("This file is too small too hide all text file. %d \n",j);
-                        return -1;
+            while ((tchar = (unsigned int)fgetc(enct)) != EOF){
+                for (int i = 7; i >= 0 ; i--) {
+                    if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
+                        imgchar = ((imgchar & mask[0])|((tchar & (1 << i)) >> i));
+                        fputc(imgchar,fout);
+                        rbits++;
+                    } else{
+                        printf("This file is too small too hide all text file.");
                     }
                 }
+                printf("%d ",tchar);
+
             }
+            printf("\n");
+
+
             printf("Writing ...\n");
             // Add rest of pixels
-            while ((c = (unsigned)fgetc(imgr)) != EOF){
-                fputc(c,fout);
+            while ((imgchar = (unsigned)fgetc(imgr)) != EOF){
+                fputc(imgchar,fout);
             }
 
             fclose(fout);
