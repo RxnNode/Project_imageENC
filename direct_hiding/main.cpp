@@ -16,7 +16,7 @@ int enc(const char *img, const char *enc){
     unsigned char header[offset];
     FILE *imgr = NULL;
     FILE *enct = NULL;
-    FILE *fout = NULL;
+    FILE *fout[8];
 
     /*
      *  image
@@ -34,7 +34,7 @@ int enc(const char *img, const char *enc){
 
     /*
      *  Output file
-     */
+     *
 
     fout = fopen("../images/enc.bmp","wb+");
     if (fout == NULL){
@@ -46,6 +46,7 @@ int enc(const char *img, const char *enc){
         fwrite(header, sizeof(unsigned char), offset, fout);    // Write header into Output file.
         printf("Bmp header writing...\n");
     }
+    */
 
     /*
      *  Read text file and write output file
@@ -56,15 +57,30 @@ int enc(const char *img, const char *enc){
         return -1;
     } else{
         fseek(enct, offset, SEEK_SET);
-        unsigned int c, enc, mask[8] = { 0b11111110,
-                                         0b11111100,
-                                         0b11111000,
-                                         0b11110000,
-                                         0b11100000,
-                                         0b11000000,
-                                         0b10000000,
-                                         0b00000000};
+        unsigned int c, enc;
+        unsigned int mask[8] = { 0b11111110,
+                                 0b11111100,
+                                 0b11111000,
+                                 0b11110000,
+                                 0b11100000,
+                                 0b11000000,
+                                 0b10000000,
+                                 0b00000000 };  //magic
+        //1 to 8 bits hiding
         for (int j = 0; j < 8; ++j) {
+
+            char filename[32];
+            sprintf(filename,"../out/out_%d.bmp",j);
+            fout[j] = fopen(filename,"wb+");
+            if (fout[j] == NULL){
+                printf("Can't create output file.\n");
+                return -1;
+            } else{
+                fseek(imgr, 0, SEEK_SET);
+                fread(&header, sizeof(char), offset, imgr);     //Read header
+                fwrite(header, sizeof(unsigned char), offset, fout[j]);    // Write header into Output file.
+                printf("Bmp header writing...\n");
+            }
 
             while ((enc = (unsigned)fgetc(enct)) != EOF){
                 for (int i = 7; i >= 0; i--) {
