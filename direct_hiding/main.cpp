@@ -14,8 +14,8 @@ int enc(const char *img, const char *enc){
 
     unsigned int offset = 0;
     unsigned char header[offset];
-    FILE *imgr = NULL;
-    FILE *enct = NULL;
+    FILE *imgr = nullptr;
+    FILE *enct = nullptr;
     FILE *fout[8];
 
     /*
@@ -23,7 +23,7 @@ int enc(const char *img, const char *enc){
      */
 
     imgr = fopen(img,"rb+");    //Read image file
-    if (imgr == NULL){
+    if (imgr == nullptr){
         printf("Failed to read image file.");
         return -1;
     } else{
@@ -52,7 +52,7 @@ int enc(const char *img, const char *enc){
      *  Read text file and write output file
      */
     enct = fopen("../text_source/secret","rb");     //Read text file
-    if (enct == NULL){
+    if (enct == nullptr){
         printf("Can't not read text file.\n");
         return -1;
     } else{
@@ -65,14 +65,29 @@ int enc(const char *img, const char *enc){
                                  0b11100000,
                                  0b11000000,
                                  0b10000000,
-                                 0b00000000 };  //magic
+                                 0b00000000 },
+                     shift[8] = { 0b00000001,
+                                  0b00000011,
+                                  0b00000111,
+                                  0b00001111,
+                                  0b00011111,
+                                  0b00111111,
+                                  0b01111111,
+                                  0b11111111};  //magic
         //1 to 8 bits hiding
         for (int j = 0; j < 8; ++j) {
+
+            struct stat st = {0};
+            if (stat("../out",&st) == -1){
+                mkdir("../out",0777);
+            } else{
+                printf("Out is already there!!");
+            }
 
             char filename[32];
             sprintf(filename,"../out/out_%d.bmp",j);
             fout[j] = fopen(filename,"wb+");
-            if (fout[j] == NULL){
+            if (fout[j] == nullptr){
                 printf("Can't create output file.\n");
                 return -1;
             } else{
@@ -83,27 +98,29 @@ int enc(const char *img, const char *enc){
             }
 
             while ((enc = (unsigned)fgetc(enct)) != EOF){
-                for (int i = 7; i >= 0; i--) {
+                for (int i = 8/(j+1) - 1; i >= 0; i--) {
                     if ((c = (unsigned) fgetc(imgr)) != EOF) {
                         c = (c & mask[j]) | ((enc & (1 << i)) >> i);
-                        fputc(c, fout);
+                        fputc(c, fout[j]);
                     } else {
                         printf("This file is too small too hide all text file.\n");
                         return 1;
                     }
                 }
             }
+            printf("Writing ...\n");
+            // Add rest of pixels
+            while ((c = (unsigned)fgetc(imgr)) != EOF){
+                fputc(c,fout[j]);
+            }
+
+            fclose(fout[j]);
         }
 
-        printf("Writing ...\n");
-        // Add rest of pixels
-        while ((c = (unsigned)fgetc(imgr)) != EOF){
-            fputc(c,fout);
-        }
+
     }
     fclose(imgr);
     fclose(enct);
-    fclose(fout);
 
 }
 
@@ -133,11 +150,13 @@ int main() {
 
     //enc("../images/img.bmp","text_source/secret");
 
-    makemultpic(20);
+    //makemultpic(20);
 
 
-
-
+    printf("%d", 1<<1);
+    printf("%d", 1<<2);
+    printf("%d", 1<<3);
+    printf("%d", 1<<4);
 
 
 
