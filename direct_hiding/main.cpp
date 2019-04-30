@@ -17,6 +17,10 @@ int enc(const char *img, const char *enc){
     FILE *imgr = nullptr;
     FILE *enct = nullptr;
     FILE *fout[8];
+    FILE *log = NULL;
+    char logc[64];
+
+    log = fopen("../log.txt","w");
 
     /*
      *  image
@@ -58,7 +62,7 @@ int enc(const char *img, const char *enc){
     } else{
         fseek(enct, offset, SEEK_SET);
         unsigned int c, enc;
-        unsigned int maskm[8] = { 0b11111110,
+        unsigned int mask[8] = { 0b11111110,
                                  0b11111100,
                                  0b11111000,
                                  0b11110000,
@@ -84,12 +88,12 @@ int enc(const char *img, const char *enc){
                                   0b11111111};  //magic
         //1 to 8 bits hiding
         for (int j = 0; j < 8; ++j) {
-
+            fseek(enct, offset, SEEK_SET);
             struct stat st = {0};
             if (stat("../out",&st) == -1){
                 mkdir("../out",0777);
             } else{
-                printf("Out is already there!!");
+                printf("Out is already there!!\n");
             }
 
             char filename[32];
@@ -102,20 +106,25 @@ int enc(const char *img, const char *enc){
                 fseek(imgr, 0, SEEK_SET);
                 fread(&header, sizeof(char), offset, imgr);     //Read header
                 fwrite(header, sizeof(unsigned char), offset, fout[j]);    // Write header into Output file.
-                printf("Bmp header writing...\n");
+                printf("%d Bmp header writing...\n",j);
             }
 
             while ((enc = (unsigned)fgetc(enct)) != EOF){
                 for (int i = 7; i >= 0; i--) {
                     if ((c = (unsigned) fgetc(imgr)) != EOF) {
-                        for (int k = j; k >= 0; k--) {
-                            i-=k*2;
-                            c = (c & masl[k]) | ((enc & (1 << i)) >> i);
-                        }
+                       // for (int k = 0; k <= j; k++) {
+                            //i = i-k;
+                            c = (c & mask[0]) | ((enc & (1 << i)) >> i);
+                            //printf("%dbits, %dtimes, %dshifted\n",j+1,k,i);
+                            sprintf(logc,"%dbits, %dtimes, %dshifted\n",(j+1),(1),i);
+                            fwrite(logc, sizeof(char),30,log);
+                        //}
                         fputc(c, fout[j]);
+
+
                     } else {
-                        printf("This file is too small too hide all text file.\n");
-                        return 1;
+                        printf("This file is too small too hide all text file. %d \n",j);
+                        //return 1;
                     }
                 }
             }
@@ -132,6 +141,7 @@ int enc(const char *img, const char *enc){
     }
     fclose(imgr);
     fclose(enct);
+    fclose(log);
 
 }
 
@@ -157,9 +167,9 @@ void makemultpic(int n){
 }
 int main() {
 
-    //convertoBMP("../images/image.jpg","../images/img.bmp");
+    convertoBMP("../images/image.jpg","../images/imgb.bmp");
 
-    //enc("../images/img.bmp","text_source/secret");
+    enc("../images/imgb.bmp","../text_source/short");
 
     //makemultpic(20);
 
