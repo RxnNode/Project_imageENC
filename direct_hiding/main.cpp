@@ -120,6 +120,9 @@ int enc(const char *img, const char *enc){
             while ((tchar = (unsigned int)fgetc(enct)) != EOF){
                 for (int i = 7; i >= 0 ; i--) {
                     if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
+                        for (int k = 0; k <= j ; ++k) {
+                            
+                        }
                         imgchar = ((imgchar & mask[0])|((tchar & (1 << i)) >> i));
                         fputc(imgchar,fout);
                         rbits++;
