@@ -121,7 +121,8 @@ int enc(const char *img, const char *enc){
                 for (int i = 7; i >= 0 ; i--) {
                     if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
                         for (int k = 0; k <= j ; ++k) {
-                            imgchar = ((imgchar & mask[k])|((tchar & (1 << k)) >> k));
+                            i+=k;
+                            imgchar = ((imgchar & mask[k])|((tchar & (1 << i)) >> i));
                         }
 
                         fputc(imgchar,fout);
