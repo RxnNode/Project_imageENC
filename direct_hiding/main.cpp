@@ -119,12 +119,15 @@ int enc(const char *img, const char *enc){
             // start hiding
             while ((tchar = (unsigned int)fgetc(enct)) != EOF){
                 for (int i = 0; i < 8 ; i++) {
-                    printf("i = %d\n",i);
+                    sprintf(logc,"i = %d\n",i);
+                    fwrite(logc, sizeof(char),10,log);
+
                     if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
                         for (int k = 0; k <= j ; ++k) {
-                            i+=k;
+                            i++;
                             imgchar = ((imgchar & mask[k])|((tchar & (1 << i)) >> i));
-                            printf("i*= %d\n",i);
+                            sprintf(logc,"i*= %d\n",i);
+                            fwrite(logc, sizeof(char),10,log);
 
                         }
 
@@ -136,6 +139,8 @@ int enc(const char *img, const char *enc){
                     }
                 }
             }
+            sprintf(logc,"%dbits done.\n",j);
+            fwrite(logc, sizeof(char),20,log);
             printf("\n");
             printf("%d bits written.\n",rbits);
             // Add rest of pixels
