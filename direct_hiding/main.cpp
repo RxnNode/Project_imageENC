@@ -118,11 +118,14 @@ int enc(const char *img, const char *enc){
             int rbits = 0;
             // start hiding
             while ((tchar = (unsigned int)fgetc(enct)) != EOF){
-                for (int i = 7; i >= 0 ; i--) {
+                for (int i = 0; i < 8 ; i++) {
+                    printf("i = %d\n",i);
                     if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
                         for (int k = 0; k <= j ; ++k) {
                             i+=k;
                             imgchar = ((imgchar & mask[k])|((tchar & (1 << i)) >> i));
+                            printf("i*= %d\n",i);
+
                         }
 
                         fputc(imgchar,fout);
