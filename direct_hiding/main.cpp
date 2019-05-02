@@ -60,8 +60,8 @@ int enc(const char *img, const char *enc){
         printf("Can't not read text file.\n");
         return -1;
     } else{
-        unsigned int tchar, imgchar, m =  0b11111110;
-        unsigned int mask[8] = { 0b11111110,
+        unsigned int tchar = 0b11111110, imgchar;
+        unsigned int maskl[8] = { 0b11111110,
                                  0b11111100,
                                  0b11111000,
                                  0b11110000,
@@ -69,7 +69,7 @@ int enc(const char *img, const char *enc){
                                  0b11000000,
                                  0b10000000,
                                  0b00000000 },
-                     masl[8] = { 0b11111110,
+                     mask[8] = { 0b11111110,
                                  0b11111101,
                                  0b11111011,
                                  0b11110111,
@@ -115,29 +115,46 @@ int enc(const char *img, const char *enc){
                 fwrite(header, sizeof(unsigned char), offset, fout);    // Write header into Output file.
                 printf("%d Bmp header writing...\n",j);
             }
-            int rbits = 0;
+            int rbits=0, i = 0;
+            bool readtext = true, control = true;
             // start hiding
-            while ((tchar = (unsigned int)fgetc(enct)) != EOF){
-                for (int i = 0; i < 8 ; i++) {
-                    sprintf(logc,"i = %d\n",i);
-                    fwrite(logc, sizeof(char),10,log);
+            while (readtext){
 
-                    if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
-                        for (int k = 0; k <= j ; ++k) {
-                            i++;
-                            imgchar = ((imgchar & mask[k])|((tchar & (1 << i)) >> i));
-                            sprintf(logc,"i*= %d\n",i);
-                            fwrite(logc, sizeof(char),10,log);
+                if (control) (tchar = (unsigned int)fgetc(enct));
 
+                if (tchar != EOF){
+                    for (i = 0; i < 8 ; i++) {
+                        sprintf(logc,"i = %d\n",i);
+                        fwrite(logc, sizeof(char),10,log);
+
+                        if ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
+                            for (int k = 0; k <= j ; ++k) {
+                                if (j != 0 && k != 0)i++;
+                                if (i > 7){
+                                    i = 0 ;
+                                    tchar = (unsigned int)fgetc(enct);
+                                    control = false;
+                                } else{
+                                    control = true;
+                                }
+                                imgchar = ((imgchar & mask[k])|((tchar & (1 << i)) >> i));
+                                sprintf(logc,"i*= %d\n",i);
+                                fwrite(logc, sizeof(char),10,log);
+
+                            }
+
+                            fputc(imgchar,fout);
+                            rbits++;
+                        } else{
+                            printf("This file is too small too hide all text file.");
+                            return -1;
                         }
-
-                        fputc(imgchar,fout);
-                        rbits++;
-                    } else{
-                        printf("This file is too small too hide all text file.");
-                        return -1;
                     }
+                } else{
+                    readtext = false;
                 }
+
+
             }
             sprintf(logc,"%dbits done.\n",j);
             fwrite(logc, sizeof(char),20,log);
