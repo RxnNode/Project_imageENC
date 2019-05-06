@@ -48,7 +48,8 @@ file size : 113 KB (115,390 byte)
 
 # PSNR
 <p align="center">
-  <img src="/direct_hiding/chart/1.png" width="400">  
+  <img src="/direct_hiding/chart/1.png" width="600">  
+  <img src="/direct_hiding/chart/2.png" width="600">
 </p>
 
 ```
@@ -76,7 +77,7 @@ MSE: 4363.196094
 8 bits hiding psnr : -100.273286
 ```
 <p align="center">
-  <img src="/direct_hiding/chart/2.png" width="400">
+  <img src="/direct_hiding/chart/2.png" width="600">
 </p>
 
 ```
