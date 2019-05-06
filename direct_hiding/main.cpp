@@ -193,13 +193,17 @@ void makemultpic(int n){
     }
 }
 
-double psnr(const char *dimg, const char *srcimg){
+long double psnr(const char *dimg, const char *srcimg){
+
     FILE *dis = nullptr;
     FILE *src = nullptr;
-    int disp = 0, srcp = 0, MSE = 0;
+    int disp = 0, srcp = 0;
     int limit = 0;
-    double PSNR = 0;
-    long int sum = 0;
+    long double PSNR = 0, MSE = 0, sum = 0;
+
+    FILE *logf = nullptr;
+    char logc[64];
+    logf = fopen("../log.txt","w");
 
     dis = fopen(dimg,"rb");     //Read text file
     if (dis == nullptr) {
@@ -213,18 +217,28 @@ double psnr(const char *dimg, const char *srcimg){
     }
 
     while ((disp = (unsigned int)fgetc(dis)) != EOF){
-        while ((srcp = (unsigned int)fgetc(src)) != EOF){
+        sprintf(logc,"dis: %d\n",disp);
+        fwrite(logc, sizeof(char),10,logf);
+
+        if((srcp = (unsigned int)fgetc(src)) != EOF){
+            sprintf(logc,"src: %d\n",srcp);
+            fwrite(logc, sizeof(char),10,logf);
+
             sum += (srcp - disp)*(srcp - disp);
         }
-        if (limit  == 512*50){
-            break;
-        } else{
-            limit++;
-        }
+
+        if (limit  == 512*50) break; else limit++;
     }
-    printf("Sum: %ld\n",sum);
-    MSE = (int)(sum/(512*512*4));
-    PSNR = 10*log((255*255/MSE));
+
+
+    printf("Sum: %Lf\n",sum);
+    MSE = (sum/(512*50*4));
+    printf("MSE: %Lf\n",MSE);
+    PSNR = 20*log(((2^32-1)/MSE));
+
+    /*fclose(logf);
+    fclose(dis);
+    fclose(src);*/
 
     return PSNR;
 }
@@ -233,19 +247,18 @@ int main() {
     //onvertoBMP("../images/image.jpg","../images/imgb.bmp");
 
     //enc("../images/imgb.bmp","../text_source/secret");
-    /*for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 8; ++i) {
         char filename[32];
-        double p = 0.0;
+        long double p = 0.0;
         sprintf(filename,"../out/out_%d.bmp",i);
         p = psnr(filename, "../images/imgb.bmp");
-        printf("%d bits hiding psnr : %8f\n",i+1,p);
-    }*/
-    double p = 0.0;
-    p = psnr("../out/out_0.bmp", "../images/imgb.bmp");
+        printf("%d bits hiding psnr : %Lf\n",i+1,p);
+    }
+    //double p = 0.0;
+    /*p = psnr("../out/out_0.bmp", "../images/imgb.bmp");
     printf("1 bits hiding psnr : %8f\n",p);
     p = psnr("../out/out_4.bmp", "../images/imgb.bmp");
-    printf("5 bits hiding psnr : %8f\n",p);
-
+    printf("5 bits hiding psnr : %8f\n",p);*/
     //makemultpic(20);
 
 
