@@ -1,5 +1,5 @@
 # 結果
-![original image](../images/image.jpg)  
+![original image](/direct_hiding/images/image.jpg)  
 
 ---
 
