@@ -3,7 +3,9 @@
 <p align="center">
   <img src="/direct_hiding/images/image.jpg" width="300" alt="original image">
 </p>
-
+```
+file size : 512 x 512
+```
 
 ## `寫入檔案` [Text file](/direct_hiding/text_source/secret)
 ```
