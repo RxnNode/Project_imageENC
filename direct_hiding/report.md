@@ -6,11 +6,13 @@
 
 ## `輸出圖片`
 <p align="center">
+  1bit隱藏
   <img src="/direct_hiding/out/out_0.bmp" width="300">  
-  <img src="/direct_hiding/out/out_1.bmp" width="300">  
+  <img src="/direct_hiding/out/out_1.bmp" width="300">
+  2bits隱藏 
 </p>
 <p align="center">
-  1bit隱藏 2bits隱藏
+
 </p>
 
 
