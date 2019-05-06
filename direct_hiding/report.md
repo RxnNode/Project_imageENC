@@ -2,14 +2,14 @@
 ## `原始圖片`
 <p align="center">
   <img src="/direct_hiding/images/image.jpg" width="300" alt="original image">
-  jpg轉32bits bmp
+  jpg轉bmp
   <img src="/direct_hiding/images/imgb.bmp" width="300" alt="original image">
 </p>
 
 ```
 file size : 205,847 byte
 image size : 512 x 512
-轉
+jpg轉bmp(32bits)
 file size : 1,048,630 byte
 image size : 512 x 512
 ```
