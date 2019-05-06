@@ -1,5 +1,6 @@
 # 結果
 ![original image](/direct_hiding/images/image.jpg)  
+<img src="/direct_hiding/images/image.jpg" width="100">
 
 ---
 
