@@ -1,5 +1,5 @@
 # 結果
-<img src="/direct_hiding/images/image.jpg" width="200" alt="original image" align="middle">
+<img src="/direct_hiding/images/image.jpg" width="300" alt="original image" align="middle">
 
 ---
 
