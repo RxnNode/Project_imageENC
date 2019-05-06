@@ -217,22 +217,22 @@ long double psnr(const char *dimg, const char *srcimg){
     }
 
     while ((disp = (unsigned int)fgetc(dis)) != EOF){
-        sprintf(logc,"dis: %d\n",disp);
-        fwrite(logc, sizeof(char),10,logf);
+        //sprintf(logc,"dis: %d\n",disp);
+        //fwrite(logc, sizeof(char),10,logf);
 
         if((srcp = (unsigned int)fgetc(src)) != EOF){
-            sprintf(logc,"src: %d\n",srcp);
-            fwrite(logc, sizeof(char),10,logf);
+            //sprintf(logc,"src: %d\n",srcp);
+            //fwrite(logc, sizeof(char),10,logf);
 
             sum += (srcp - disp)*(srcp - disp);
         }
 
-        if (limit  == 512*50) break; else limit++;
+        if (limit  == 512*512) break; else limit++;
     }
 
 
     printf("Sum: %Lf\n",sum);
-    MSE = (sum/(512*50*4));
+    MSE = (sum/(512*512*4));
     printf("MSE: %Lf\n",MSE);
     PSNR = 20*log(((2^32-1)/MSE));
 
