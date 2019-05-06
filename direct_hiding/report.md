@@ -6,8 +6,9 @@
 
 ## `輸出圖片`
 <img align="left" src="/direct_hiding/out/out_0.bmp" width="300">  
-<img align="right" src="/direct_hiding/out/out_1.bmp" width="300">
-<br>
+<img align="right" src="/direct_hiding/out/out_1.bmp" width="300">  
+
+
 ---
 
 # 結構
