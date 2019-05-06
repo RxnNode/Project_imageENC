@@ -4,9 +4,9 @@
   <img src="/direct_hiding/images/image.jpg" width="300" alt="original image">
 </p>
 ## `寫入檔案`
-[Short text file](/direct_hiding/text_source/short)  
+[Short text file](/direct_hiding/text_source/secret)  
 ```
-file size : 4.33 KB
+file size : 113 KB
 ```
 ## `輸出圖片`
 <p align="center">
