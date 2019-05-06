@@ -7,7 +7,7 @@
 </p>
 
 ```
-                   file size : 205,847 byte                    file size : 1,048,630 byte
+                file size : 205,847 byte                       file size : 1,048,630 byte
                   image size : 512 x 512    jpg轉bmp(32bits)   image size : 512 x 512
 ```
 ==**已bmp檔做隱藏，至多可以以1bit隱藏一個131078 byte的檔案**==
