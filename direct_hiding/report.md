@@ -4,13 +4,11 @@
   <img src="/direct_hiding/images/image.jpg" width="300" alt="original image">
 </p>
 
----
 
-## `寫入檔案` [Short text file](/direct_hiding/text_source/secret)
+## `寫入檔案` [Text file](/direct_hiding/text_source/secret)
 ```
 file size : 113 KB
 ```
----
 
 ## `輸出圖片`
 <p align="center">
