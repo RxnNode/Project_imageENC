@@ -1,4 +1,7 @@
 # 結構
-<i class="fas fa-folder-open"></i>direct_hiding
+:file_folder:direct_hiding
+  L:file_folder:
+  L:file_folder:
+  L:file_folder:
 
 #
