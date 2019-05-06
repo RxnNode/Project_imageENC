@@ -3,6 +3,9 @@
 <p align="center">
   <img src="/direct_hiding/images/image.jpg" width="300" alt="original image">
 </p>
+
+---
+
 ## `輸出圖片`
 ## `原始圖片`
 
