@@ -9,14 +9,16 @@
 ```
 file size : 205,847 byte
 image size : 512 x 512
-jpg轉bmp(32bits)
+    jpg轉bmp(32bits)
 file size : 1,048,630 byte
 image size : 512 x 512
 ```
+已bmp檔做隱藏，至多可以以1bit隱藏一個131078 byte的檔案
+
 
 ## `寫入檔案` [Text file](/direct_hiding/text_source/secret)
 ```
-file size : 113 KB
+file size : 113 KB (115,390 byte)
 ```
 
 ## `輸出圖片`
