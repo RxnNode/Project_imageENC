@@ -44,10 +44,17 @@ file size : 113 KB (115,390 byte)
   8bits隱藏
 </p>
 
-
 ---
 
 # PSNR
+<p align="center">
+  <img src="/direct_hiding/chart/1.png" width="200">  
+  <img src="/direct_hiding/chart/2.png" width="200">
+</p>
+```
+```
+```
+```
 
 # 結構
 :file_folder:**direct_hiding**  
