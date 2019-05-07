@@ -18,7 +18,7 @@
 file size : 113 KB (115,390 byte)
 ```
 
-## `輸出圖片`(512x512)
+## `輸出圖片`
 <p align="center">
   1bit隱藏
   <img src="/direct_hiding/out/out_0.bmp" width="200">  
@@ -63,7 +63,7 @@ file size : 113 KB (115,390 byte)
 7 bits hiding psnr : -75.548571
 8 bits hiding psnr : -100.273286
 ```
-## `全圖採樣`
+## `全圖採樣`(512x512)
 
 <p align="center">
   <img src="/direct_hiding/chart/2.png" width="500">
