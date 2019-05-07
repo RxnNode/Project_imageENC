@@ -79,6 +79,7 @@ file size : 113 KB (115,390 byte)
 7 bits hiding psnr : -63.178387
 8 bits hiding psnr : -84.354983
 ```
+---
 
 # 結構
 :file_folder:**direct_hiding**  
