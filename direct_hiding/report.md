@@ -66,7 +66,7 @@ file size : 113 KB (115,390 byte)
 ## `全圖採樣`
 
 <p align="center">
-  <img src="/direct_hiding/chart/2.png" width="600">
+  <img src="/direct_hiding/chart/2.png" width="500">
 </p>
 
 ```
