@@ -18,7 +18,7 @@
 file size : 113 KB (115,390 byte)
 ```
 
-## `輸出圖片`
+## `輸出圖片`(512x512)
 <p align="center">
   1bit隱藏
   <img src="/direct_hiding/out/out_0.bmp" width="200">  
@@ -47,7 +47,7 @@ file size : 113 KB (115,390 byte)
 ---
 
 # PSNR
-## `部分採樣`
+## `部分採樣`(512x50)
 
 <p align="center">
   <img src="/direct_hiding/chart/1.png" width="500">  
