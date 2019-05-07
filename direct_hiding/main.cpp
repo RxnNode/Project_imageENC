@@ -62,30 +62,14 @@ int enc(const char *img, const char *enc){
         return -1;
     } else{
         unsigned int tchar = 0b11111110, imgchar;
-        unsigned int maskl[8] = { 0b11111110,
-                                 0b11111100,
-                                 0b11111000,
-                                 0b11110000,
-                                 0b11100000,
-                                 0b11000000,
-                                 0b10000000,
-                                 0b00000000 },
-                     mask[8] = { 0b11111110,
+        unsigned int mask[8] = { 0b11111110,
                                  0b11111101,
                                  0b11111011,
                                  0b11110111,
                                  0b11101111,
                                  0b11011111,
                                  0b10111111,
-                                 0b01111111 },
-                     shift[8] = { 0b00000001,
-                                  0b00000011,
-                                  0b00000111,
-                                  0b00001111,
-                                  0b00011111,
-                                  0b00111111,
-                                  0b01111111,
-                                  0b11111111};  //magic
+                                 0b01111111 };  //magic
 
 
 
@@ -173,25 +157,10 @@ int enc(const char *img, const char *enc){
     fclose(imgr);
     fclose(enct);
     fclose(log);
+    return 0;
 
 }
 
-
-void makemultpic(int n){
-    FILE *test[n];
-    struct stat st = {0};
-    if (stat("../out",&st) == -1){
-        mkdir("../out",0777);
-    } else{
-        printf("Out is already there!!");
-    }
-    for (int i = 0; i < n; i++) {
-        char filename[32];
-        sprintf(filename,"../out/out_%d.bmp",i);
-        test[i] = fopen(filename,"wb");
-
-    }
-}
 
 long double psnr(const char *dimg, const char *srcimg){
 
@@ -200,10 +169,6 @@ long double psnr(const char *dimg, const char *srcimg){
     int disp = 0, srcp = 0;
     int limit = 0;
     long double PSNR = 0, MSE = 0, sum = 0;
-
-    FILE *logf = nullptr;
-    char logc[64];
-    logf = fopen("../log.txt","w");
 
     dis = fopen(dimg,"rb");     //Read text file
     if (dis == nullptr) {
@@ -217,12 +182,8 @@ long double psnr(const char *dimg, const char *srcimg){
     }
 
     while ((disp = (unsigned int)fgetc(dis)) != EOF){
-        //sprintf(logc,"dis: %d\n",disp);
-        //fwrite(logc, sizeof(char),10,logf);
 
         if((srcp = (unsigned int)fgetc(src)) != EOF){
-            //sprintf(logc,"src: %d\n",srcp);
-            //fwrite(logc, sizeof(char),10,logf);
 
             sum += (srcp - disp)*(srcp - disp);
         }
@@ -236,9 +197,8 @@ long double psnr(const char *dimg, const char *srcimg){
     printf("MSE: %Lf\n",MSE);
     PSNR = 20*log(((2^32-1)/MSE));
 
-    /*fclose(logf);
     fclose(dis);
-    fclose(src);*/
+    fclose(src);
 
     return PSNR;
 }
