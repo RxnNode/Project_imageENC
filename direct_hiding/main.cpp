@@ -204,14 +204,14 @@ long double psnr(const char *dimg, const char *srcimg){
 }
 int main() {
 
-    //onvertoBMP("../images/image.jpg","../images/imgb.bmp");
+    convertoBMP("../images/lena.png","../images/imgl.bmp");
 
-    //enc("../images/imgb.bmp","../text_source/secret");
+    enc("../images/imgl.bmp","../text_source/secret");
     for (int i = 0; i < 8; ++i) {
         char filename[32];
         long double p = 0.0;
         sprintf(filename,"../out/out_%d.bmp",i);
-        p = psnr(filename, "../images/imgb.bmp");
+        p = psnr(filename, "../images/imgl.bmp");
         printf("%d bits hiding psnr : %Lf\n",i+1,p);
     }
     //double p = 0.0;
