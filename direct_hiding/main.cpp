@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <math.h>
 #include "img_convert.h"
+#include "math_rela.h"
+#include "enc_file.h"
 
 
 
