@@ -1,12 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <math.h>
 #include "img_convert.h"
 #include "math_rela.h"
 #include "enc_file.h"
@@ -20,7 +13,7 @@ int main() {
 
     convertoBMP("../images/lena.png","../images/imgl.bmp");
 
-    enc("../images/imgl.bmp","../text_source/secret");
+    enc_file("../images/imgl.bmp","../text_source/secret");
     for (int i = 0; i < 8; ++i) {
         char filename[32];
         long double p = 0.0;
