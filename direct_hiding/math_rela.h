@@ -12,39 +12,31 @@
 
 long double psnr(const char *dimg, const char *srcimg){
 
-    FILE *dis = nullptr;
-    FILE *src = nullptr;
+    FILE *dis = nullptr;    //sample image file
+    FILE *src = nullptr;    //source image file
     int disp = 0, srcp = 0;
     int limit = 0;
     long double PSNR = 0, MSE = 0, sum = 0;
 
-    dis = fopen(dimg,"rb");     //Read text file
+    //Read sample image file
+    dis = fopen(dimg,"rb");
     if (dis == nullptr) {
         printf("Can't not image file.\n");
         return -1;
     }
-    src = fopen(srcimg,"rb");     //Read text file
+    //Read source image file
+    src = fopen(srcimg,"rb");
     if (src == nullptr) {
         printf("Can't not simage file.\n");
         return -1;
     }
-
+    //calculate square error
     while ((disp = (unsigned int)fgetc(dis)) != EOF){
-
-        if((srcp = (unsigned int)fgetc(src)) != EOF){
-
-            sum += (srcp - disp)*(srcp - disp);
-        }
-
+        if((srcp = (unsigned int)fgetc(src)) != EOF) sum += (srcp - disp)*(srcp - disp);
         if (limit  == 512*512) break; else limit++;
     }
-
-
-    printf("Sum: %Lf\n",sum);
     MSE = (sum/(512*512*4));
-    printf("MSE: %Lf\n",MSE);
     PSNR = 20*log(((2^32-1)/MSE));
-
     fclose(dis);
     fclose(src);
 
