@@ -1,5 +1,5 @@
 //
-// Created by Yung-An Jen on 2019-05-16.
+// Created by RxnNode on 2019-05-16.
 //
 
 #ifndef ENC_MATH_H
