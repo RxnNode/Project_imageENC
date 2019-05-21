@@ -21,6 +21,7 @@ int main() {
         p = psnr(filename, "../images/imgl.bmp");
         printf("%d bits hiding psnr : %Lf\n",i+1,p);
     }
+
     //double p = 0.0;
     /*p = psnr("../out/out_0.bmp", "../images/imgb.bmp");
     printf("1 bits hiding psnr : %8f\n",p);
