@@ -29,19 +29,7 @@ int enc_rand(const char *img, const char *enc){
     */
 
 
-    /*
-     *  source image
-     *
-    imgr = fopen(img,"rb+");    //Read image file
-    if (imgr == nullptr){
-        printf("Failed to read image file.");
-        return -1;
-    } else{
-        fseek(imgr, 10, SEEK_SET);  //Get offset
-        fread(&offset, sizeof(int), 1, imgr);
-        printf("Offset: %d\n",offset);
-    }
-     */
+  
 
     /*
      *  Read text file and write output file
