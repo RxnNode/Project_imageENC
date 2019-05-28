@@ -16,9 +16,9 @@ int enc_file(const char *img, const char *enc){
 
     unsigned int offset = 0;
     unsigned char header[offset];
-    FILE *imgr = nullptr;
-    FILE *enct = nullptr;
-    FILE *fout = nullptr;
+    FILE *imgr = nullptr;   //source image
+    FILE *enct = nullptr;   //input file
+    FILE *fout = nullptr;   //Output file
 
     /*
      *  Debug log
@@ -37,8 +37,8 @@ int enc_file(const char *img, const char *enc){
         printf("Failed to read image file.");
         return -1;
     } else{
-        fseek(imgr, 10, SEEK_SET);  //Get offset
-        fread(&offset, sizeof(int), 1, imgr);
+        fseek(imgr, 10, SEEK_SET);  //Set offset
+        fread(&offset, sizeof(int), 1, imgr);   //Get offset
         printf("Offset: %d\n",offset);
     }
 
