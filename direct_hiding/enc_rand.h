@@ -16,7 +16,7 @@ int enc_rand(const char *img, const char *enc){
 
     unsigned int offset = 0;
     unsigned char header[offset];
-    FILE *imgr = nullptr;
+    FILE *imgr = nullptr;   //image source
     FILE *enct = nullptr;
     FILE *fout = nullptr;
 
@@ -29,7 +29,7 @@ int enc_rand(const char *img, const char *enc){
     */
 
 
-  
+
 
     /*
      *  Read text file and write output file
