@@ -39,7 +39,7 @@ int enc_file(const char *img, const char *enc){
     } else{
         fseek(imgr, 10, SEEK_SET);  //Set offset
         fread(&offset, sizeof(int), 1, imgr);   //Get offset
-        printf("Offset: %d\n",offset);
+        //  printf("Offset: %d\n",offset);
     }
 
     /*
