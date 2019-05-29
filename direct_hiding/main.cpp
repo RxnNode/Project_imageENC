@@ -11,16 +11,17 @@
 
 int main() {
 
-    convertoBMP("../images/lena.png","../images/imgl.bmp");
+    //convertoBMP3C("../images/lena.png","../images/lenaRGB2.bmp");
+    convertoBMP4C("../images/lena.png","../images/lenaRGBA.bmp");
 
-    enc_file("../images/imgl.bmp","../text_source/secret");
-    for (int i = 0; i < 8; ++i) {
+    //enc_file("../images/imgl.bmp","../text_source/secret");
+    /*for (int i = 0; i < 8; ++i) {
         char filename[32];
         long double p = 0.0;
         sprintf(filename,"../out/out_%d.bmp",i);
         p = psnr(filename, "../images/imgl.bmp");
         printf("%d bits hiding psnr : %Lf\n",i+1,p);
-    }
+    }*/
 
     //double p = 0.0;
     /*p = psnr("../out/out_0.bmp", "../images/imgb.bmp");
