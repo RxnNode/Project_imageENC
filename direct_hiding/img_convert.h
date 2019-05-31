@@ -63,15 +63,15 @@ int convertoBMP4C(const char *srcname, const char *disname){
     cv::Mat imgin = cv::imread(srcname);
     cv::Mat imgbmp32b;
     cv::Mat imgbmp32bc4;
-    imgin.convertTo(imgbmp32b, CV_32SC3);
+    imgin.convertTo(imgbmp32b, CV_32FC4);
     cv::cvtColor(imgbmp32b, imgbmp32bc4, cv::COLOR_BGR2BGRA, 0);
     cv::imwrite(disname, imgbmp32bc4);
     return 0;
 }
-/*int convertoBMP3C(const char *srcname, const char *disname){
+int convertoBMP3C(const char *srcname, const char *disname) {
     cv::Mat imgin = cv::imread(srcname);
     cv::Mat imgbmp32b;
-    imgin.convertTo(imgbmp32b, CV_32SC3);
+    imgin.convertTo(imgbmp32b, CV_32FC3);
     cv::imwrite(disname, imgbmp32b);
     return 0;
-}*/
+}
