@@ -11,10 +11,10 @@
 
 int main() {
 
-    //convertoBMP3C("../images/lena.png","../images/lenaRGB2.bmp");
+    convertoBMP3C("../images/lena.png","../images/lenaRGB.bmp");
     convertoBMP4C("../images/lena.png","../images/lenaRGBA.bmp");
 
-    //enc_file("../images/imgl.bmp","../text_source/secret");
+    enc_file("../images/lenaRGB.bmp","../text_source/secret");
     /*for (int i = 0; i < 8; ++i) {
         char filename[32];
         long double p = 0.0;
