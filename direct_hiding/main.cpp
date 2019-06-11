@@ -3,6 +3,7 @@
 #include "img_convert.h"
 #include "math_rela.h"
 #include "enc_file.h"
+#include "enc_rand.h"
 
 
 
@@ -15,6 +16,8 @@ int main() {
     convertoBMP4C("../images/lena.png","../images/lenaRGBA.bmp");
 
     enc_file("../images/lenaRGB.bmp","../text_source/secret");
+    enc_rand("../images/lenaRGB.bmp","../text_source/secret");
+
     /*for (int i = 0; i < 8; ++i) {
         char filename[32];
         long double p = 0.0;
