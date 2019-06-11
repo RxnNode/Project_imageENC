@@ -8,8 +8,10 @@
 #endif //ENC_ENC_RAND_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
 int enc_rand(const char *img, const char *enc){
 
@@ -18,6 +20,8 @@ int enc_rand(const char *img, const char *enc){
     unsigned char header[offset];
     FILE *imgr = nullptr;   //image source
     FILE *fout = nullptr;
+
+    srand(time(NULL));
 
     /*
      *  Debug log
@@ -48,7 +52,15 @@ int enc_rand(const char *img, const char *enc){
             fread(&offset, sizeof(int), 1, imgr);   //Get offset
         }
 
-    unsigned int tchar = 0b11111110, imgchar;
+    unsigned int rchar, imgchar;
+    unsigned int mask[8] = { 0b11111110,
+                             0b11111101,
+                             0b11111011,
+                             0b11110111,
+                             0b11101111,
+                             0b11011111,
+                             0b10111111,
+                             0b01111111 };  //magic
     //1 to 8 bits hiding
         for (int j = 0; j < 8; ++j) {
 
@@ -68,17 +80,18 @@ int enc_rand(const char *img, const char *enc){
                 printf("%d Bmp header writing...\n", j);
             }
 
-
-            int rbits = 0, i = 0;
-            bool readtext = true, control = true;
             // start hiding
-            for (int k = 0; k < 8 ; ++k) {
                 while ((imgchar = (unsigned int)fgetc(imgr)) != EOF){
-
+                    rchar =rand() % 2 + 1;
+                    for (int l = 0; l <=j; l++) {
+                        imgchar =((imgchar & mask[l])|(rchar << l));
+                    }
+                    fputc(imgchar,fout);
                 }
-            }
-        }
 
+        }
+    fclose(imgr);
+    fclose(fout);
     return 0;
 
 }
