@@ -63,8 +63,8 @@ int enc_file(const char *img, const char *enc){
 
         // check folder
         struct stat st = {0};
-        if (stat("../out",&st) == -1){
-            mkdir("../out",0777);
+        if (stat("../FileOut",&st) == -1){
+            mkdir("../FileOut",0777);
         } else{
             printf("Out is already there!!\n");
         }
@@ -77,7 +77,7 @@ int enc_file(const char *img, const char *enc){
 
             // Create multiple files
             char filename[32];
-            sprintf(filename,"../out/out_%d.bmp",j);
+            sprintf(filename,"../FileOut/FileOut_%d.bmp",j);
             fout = fopen(filename,"wb+");
             if (fout == nullptr){
                 printf("Can't create output file.\n");
