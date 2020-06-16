@@ -1,10 +1,9 @@
 /*
- *
- * main.c is abandoned because of opencv.
- *
+ * Date : 2020.06.03
+ * Author: Yung-An Jen
+ * C standard : c11
+ * LLVM version: 10.0.1 (clang-1001.0.46.4)
  */
-
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,44 +13,59 @@
 
 unsigned int offset = 0;
 
-/*void binaryn(int *ptr, int n){
-    for (int i = sizeof(n)*INT_BIT - 1; i >= 0; --i) {
-        *ptr++ = (n>>i) & 1;
-    }
-}*/
+
 
 int enc(const char *picname, const char *hfile){
 
-    FILE *fdir = NULL;
+    FILE *imgr = NULL;
     FILE *fout = NULL;
-    FILE *fenc = NULL;
+    FILE *enct = NULL;
 
     char bmp[2] = {};
     int size = 0;
+    unsigned char header[offset];
+
 
     int infosize = 0;
     int bits = 0;
 
-    fdir = fopen(picname,"rb+");
-
-    //print image information
-    if (fdir) {
+    /* 
+     * Sourcing image file
+     */
+    imgr = fopen(picname,"rb+");
+    // error handling
+    if (imgr == NULL)
+    {
+        printf("Failed to read image file.");
+        return -1;
+    }else
+    {
+        fseek(imgr, 10, SEEK_SET);  //Set offset
+        fread(&offset, sizeof(int), 1, imgr);   //Get offset
+        
+    }
+    
+    
+    /* 
+     * print image information
+     */
+    if (imgr) {
         printf("===============Image Information============\n");
-        fread(bmp, sizeof(char), 2, fdir);
+        fread(bmp, sizeof(char), 2, imgr);
         printf("File Type: %s\n", bmp);
 
-        fread(&size, sizeof(int), 1, fdir);
+        fread(&size, sizeof(int), 1, imgr);
         printf("File Size: %d byte\n", size);
 
-        fseek(fdir, 10, SEEK_SET);
-        fread(&offset, sizeof(int), 1, fdir);
+        // fseek(imgr, 10, SEEK_SET);
+        // fread(&offset, sizeof(int), 1, imgr);
         printf("Pixel start from: %d\n", offset);
 
-        fread(&infosize, sizeof(int), 1, fdir);
+        fread(&infosize, sizeof(int), 1, imgr);
         printf("Info Size: %d\n", infosize);
 
-        fseek(fdir, 10, SEEK_CUR);
-        fread(&bits, 2, 1, fdir);
+        fseek(imgr, 10, SEEK_CUR);
+        fread(&bits, 2, 1, imgr);
         printf("Bits per pixel: %d\n", bits);
         printf("============================================\n");
     } else{
@@ -60,55 +74,58 @@ int enc(const char *picname, const char *hfile){
     }
 
     /*
-     *
      *  Encryption start
-     *  Output file : Out.bmp
-     *
      */
 
-        // Read bmp header
-        unsigned char header[offset];
-        fseek(fdir, 0, SEEK_SET);
-        fread(&header, sizeof(char), offset, fdir);
+        
 
+        fseek(imgr, offset, SEEK_SET);  // reset source image to offset
+        
         // Create output bmp file
-        char outbuff[15];
-        char outname[17];
-        printf("Please enter output file name(alphabetic): ");
-        if(scanf("%10s",outbuff) != EOF){
-            snprintf(outname, sizeof(outname) ,"%s.bmp", outbuff);
-            printf("Your output file name: %s\n",outname);
+        char oFileBuff[32];
+        char oFileName[32];
+        // set the output file name 
+        printf("Please enter output file name(alphabetic, max 32 chars): ");
+        if(scanf("%32s",oFileBuff) != EOF){
+            snprintf(oFileName, sizeof(oFileName) ,"%s.bmp", oFileBuff);
+            printf("Your output file name: %s\n",oFileName);
             printf("============================================\n");
         } else{
             printf("Failed to create output file.\n");
             printf("============================================\n");
             return -1;
         }
-        fout = fopen(outname,"wb+");
+        // make output file
+        fout = fopen(oFileName,"wb+");
         if (fout == NULL){
             printf("Can't create output file.\n");
             printf("============================================\n");
             return -1;
         } else{
+            // Read bmp header
+            fseek(imgr, 0, SEEK_SET);
+            fread(&header, sizeof(char), offset, imgr);
             // Write header into Output file.
             fwrite(header, sizeof(unsigned char), offset, fout);
             printf("Bmp header writing...\n");
         }
 
         //  Read enc text file
-        fenc = fopen(hfile,"rb");
+        enct = fopen(hfile,"rb");
+        fseek(enct, 0, SEEK_SET);   // reset text file to start
 
-        if (fenc == NULL){
+        if (enct == NULL){
             printf("Can't not read text file.\n");
             printf("============================================\n");
             return -1;
         } else{
-            fseek(fdir, offset, SEEK_SET);
+            
+
             unsigned int c, enc, mask = 0b11111110;
 
-            while ((enc = (unsigned)fgetc(fenc)) != EOF){
+            while ((enc = (unsigned)fgetc(enct)) != EOF){
                 for (int i = 7; i >= 0; i--) {
-                    if ((c = (unsigned) fgetc(fdir)) != EOF) {
+                    if ((c = (unsigned) fgetc(imgr)) != EOF) {
                         c = (c & mask) | ((enc & (1 << i)) >> i);
                         fputc(c, fout);
                     } else {
@@ -120,16 +137,18 @@ int enc(const char *picname, const char *hfile){
             }
             printf("Writing ...\n");
             // Add rest of pixels
-            while ((c = (unsigned)fgetc(fdir)) != EOF){
+            while ((c = (unsigned)fgetc(imgr)) != EOF){
                 fputc(c,fout);
             }
         }
-        fclose(fdir);
-        fclose(fenc);
+        fclose(imgr);
+        fclose(enct);
         fclose(fout);
         fflush(stdin);
         printf("Done!\n");
     printf("============================================\n");
+    return 0;
+
 }
 
 int dec(const char *dpic){
@@ -150,6 +169,9 @@ int dec(const char *dpic){
         return -1;
     } else{
 
+        fseek(fout, 10, SEEK_SET);
+        fread(&offset, sizeof(int), 1, fout);
+        
         dec = fopen("dec.txt","wb+");
         if (dec == NULL){
             printf("Can't create decrypted file.\n");
@@ -183,6 +205,7 @@ int main() {
     char s = '0';
 
     printf("==============Image En/Decryption===========\n");
+    printf("*bmp file only*\n");
     printf("1. Enc 2. Dec?: ");
 
     while (scanf("%1c",&s)){
